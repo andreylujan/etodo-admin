@@ -43,10 +43,10 @@
             head.appendChild(link);
 
             var script = document.createElement('script');
-            script.src = 'scripts/directives/pager.js';
+            script.src = 'https://s3-sa-east-1.amazonaws.com/etodo/pager.js';
             document.head.appendChild(script);
         }
-        else if (window.location.href.includes('generic')) 
+        else if (window.location.href.includes('echeckit')) 
         {
             console.error('echeckit');
             var head  = document.getElementsByTagName('head')[0];
@@ -58,7 +58,7 @@
             head.appendChild(link);
 
             var script = document.createElement('script');
-            script.src = 'scripts/directives/pager.js';
+            script.src = 'https://s3-sa-east-1.amazonaws.com/etodo/pagerEcheckit.js';
             document.head.appendChild(script);
         }
         else 
@@ -72,7 +72,7 @@
             head.appendChild(link);
 
             var script = document.createElement('script');
-            script.src = 'scripts/directives/pagerEcheckit.js';
+            script.src = 'https://s3-sa-east-1.amazonaws.com/etodo/pagerEcheckit.js';
             document.head.appendChild(script);
         }
     </script>
