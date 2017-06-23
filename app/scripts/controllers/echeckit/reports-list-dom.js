@@ -296,13 +296,13 @@ angular.module('adminProductsApp')
 							//valida que existe el objeto dentro de los dynamic_attributes
 							if (flag.hasOwnProperty(aux[1])) 
 							{
-								//Valida que exista el objeto text
-								if (flag[aux[1]].hasOwnProperty('text')) 
+								//Valida que exista el objeto value
+								if (flag[aux[1]].hasOwnProperty('value')) 
 								{
 									//$log.error('2')
 									//$log.error(flag[aux[1]]);
-									test[test.length - 1][$scope.columns2[j].field_a] = flag[aux[1]].text;
-									test[test.length - 1][$scope.columns2[j].name] = flag[aux[1]].text;
+									test[test.length - 1][$scope.columns2[j].field_a] = flag[aux[1]].value;
+									test[test.length - 1][$scope.columns2[j].name] = flag[aux[1]].value;
 								}
 								else
 								{
