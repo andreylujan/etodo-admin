@@ -68,11 +68,16 @@
           <a ui-sref="{{section.path}}"><fa name="{{section.icon}}"></fa> <span>{{section.name}}</span></a>
           <ul>
             <div ng-repeat="item in section.items">
-              <li ui-sref-active="active" ng-if="item.path != 'efinding.maestros.tabla'"> 
-                <a ui-sref="{{item.path}}">
+              <li ui-sref-active="active" ng-if="item.path === 'echeckit.maestros.tabla'">
+                <a ng-click="goToMaster(item.collection_id)">
                   <fa name="caret-right"></fa> {{item.name}}
                 </a>
               </li>
+              <!--li ui-sref-active="active" ng-if="item.path != 'efinding.maestros.tabla'"> 
+                <a ui-sref="{{item.path}}">
+                  <fa name="caret-right"></fa> {{item.name}}
+                </a>
+              </li-->
               <li ui-sref-active="active" ng-if="item.path === 'efinding.maestros.tabla'">
                 <a ng-click="goToMaster(item.collection_id)">
                   <fa name="caret-right"></fa> {{item.name}}

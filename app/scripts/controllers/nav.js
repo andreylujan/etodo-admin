@@ -17,9 +17,25 @@ angular.module('adminProductsApp')
 	};
 
 	$scope.goToMaster = function(type) {
-		$state.go('efinding.maestros.tabla', {
-			type: type
-		});
+		if (window.location.href.includes('efinding')) 
+        {
+        	$state.go('efinding.maestros.tabla', {
+				type: type
+			});
+        }
+        else if (window.location.href.includes('echeckit')) 
+        {
+        	$state.go('echeckit.maestros.tabla', {
+				type: type
+			});
+        }
+        else
+        {
+        	$state.go('echeckit.maestros.tabla', {
+				type: type
+			});
+
+        }
 	};
 
 	$scope.loaded = false;
