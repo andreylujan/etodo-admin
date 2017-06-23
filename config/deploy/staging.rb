@@ -7,7 +7,7 @@
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
-set :deploy_to, '/srv/http/www/efinding/staging/admin'
+set :deploy_to, '/srv/http/www/products/staging/admin'
 
 server '50.16.161.152', port: 60, user: 'ubuntu', roles: [:web, :app, :db]
 

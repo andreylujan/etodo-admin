@@ -2,7 +2,7 @@
 lock '3.7.1'
 
 set :application, 'admin'
-set :repo_url, 'git@github.com:andreylujan/Moller-Admin.git'
+set :repo_url, 'git@github.com:andreylujan/etodo-admin.git'
 set :branch, 'master'
 
 set :ssh_options, {
