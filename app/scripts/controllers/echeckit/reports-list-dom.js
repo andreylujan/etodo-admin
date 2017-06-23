@@ -395,7 +395,7 @@ angular.module('adminProductsApp')
 			});
 	};
 
-	/*$scope.incrementPage = function() {
+	$scope.incrementPage = function() {
 		if ($scope.pagination.pages.current <= $scope.pagination.pages.total - 1) {
 			$scope.pagination.pages.current++;
 			$scope.filter['page[number]'] = $scope.pagination.pages.current;
@@ -413,7 +413,7 @@ angular.module('adminProductsApp')
 				success: true
 			}, $scope.pagination.pages.current, $scope.filter);
 		}
-	};*/
+	};
 
 	$scope.ChangeStateReport = function(idReport, idState) {
 
