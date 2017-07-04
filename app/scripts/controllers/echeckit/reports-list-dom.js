@@ -689,7 +689,7 @@ angular.module('adminProductsApp')
 	});
 })
 
-.controller('CierreDeNegocioInstance', function($scope, $log, $uibModalInstance, idReport, idState, Validators, Reports, Utils) {
+.controller('CierreDeNegocioInstance', function($scope, $log, $uibModalInstance, idReport, idState, Validators, Reports, Utils, Collection) {
 
 	$scope.report = {
 		id: idReport,
@@ -705,7 +705,7 @@ angular.module('adminProductsApp')
 	$scope.motivoPerdida = {
 		visible: false,
 		data: [],
-		selected: {name:'A0', id: 0}//null
+		selected: null
 	};
 
 	$scope.elements = {
@@ -726,26 +726,36 @@ angular.module('adminProductsApp')
 	};
 
 
-	for (var i = 0; i < 10; i++) {
-		$scope.motivoPerdida.data.push({
-			name: 'A'+i,
-			id: i
-		});	
-	}
 
-	//RECORDAR
-	//RECORDAR
-	//RECORDAR
-	//TENGO QUE IR A LA API PARA BUSCAR LOS MOTIVOS DE PERDIDA
-	//RECORDAR
-	//RECORDAR
-	//RECORDAR
+	$scope.getCollection = function() {
+		Collection.query({
+			idCollection: 26
+		}, function(success) {
+			if (success.data) {
+				for (var i = 0; i < success.included.length; i++) {
+					$scope.motivoPerdida.data.push({
+						name: success.included[i].attributes.name,
+						id: success.included[i].id
+					});
+				}
+				$scope.motivoPerdida.selected = {name: $scope.motivoPerdida.data[0].name, id: $scope.motivoPerdida.data[0].id};
+			} else {
+				$log.log(success);
+			}
+
+		}, function(error) {
+			$log.error(error);
+			if (error.status) {
+				Utils.refreshToken($scope.getCollection);
+			}
+
+		});
+	};
+	$scope.getCollection();
 
 
 	$scope.finalizarCierreNegocio = function() 
 	{
-		//METODO QUE AGREGA UNA PROPUESTA
-
 		$scope.dynamic_attributes['60'] = { value: $scope.report.cierreNegocio.value };
 		$scope.dynamic_attributes['61'] = { text: $scope.motivoPerdida.selected.name, id: $scope.motivoPerdida.selected.id };
 		$scope.dynamic_attributes['63'] = { text: $scope.report.montoCierre.text };
