@@ -338,6 +338,11 @@ angular
 				templateUrl: 'views/tmpl/echeckit/reports/dom.html',
 				controller: 'ReportsListDomEcheckitCtrl'
 			})
+			.state('echeckit.reports.mydom', {
+				url: '/user-dom',
+				templateUrl: 'views/tmpl/echeckit/reports/dom.html',
+				controller: 'ReportsListMyDomEcheckitCtrl'
+			})
 
 		//Tasks
 		.state('echeckit.tasks', {
