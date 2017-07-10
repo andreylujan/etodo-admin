@@ -7,7 +7,9 @@
  * # pager
  */
 angular.module('adminProductsApp')
-  .directive('pager', function($log) {
+  .directive('pager', function($log) 
+  {
+    
     if (window.location.href.includes('efinding')) 
     {
       return {
