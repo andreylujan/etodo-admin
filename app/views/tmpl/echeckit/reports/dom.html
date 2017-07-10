@@ -31,12 +31,14 @@
 								<tr>
 									<th ng-repeat="column in columns2" class="text-center sortable" ng-click="sortBy(column.field_a)"> {{column.title}} </th>
 									<th class="text-center"> PDF </th>
-									<th class="text-center"> Acciones </th>
+									<th class="text-center"> Estado </th>
+									<th class="text-center"> Cambio de responsable </th>
 								</tr>
 								<tr>
 									<th ng-repeat="column in columns2" class="text-center sortable" >
 										<input type="text" class="form-control" ng-model="filter[column.filter].filter"/>
 									</th>
+									<th class="text-center" ></th>
 									<th class="text-center" ></th>
 									<th class="text-center" ></th>
 								</tr>
@@ -51,7 +53,7 @@
 										<input ng-if="!report['pdfUploaded']" class="text-center" type="image" src="http://dhg7r6mxe01qf.cloudfront.net/icons/admin/denied2.png" uib-tooltip="PDF no disponible" tooltip-placement="bottom" style="width: 20px;" data-pdf="{{report.pdf}}" />
 									</td>
 									<td>
-										<label ng-if="report.state == 7">Ingreso de actividades </label>
+										<a ng-click="UpdateReport(report.id)" ng-if="report.state == 7">Ingreso de actividades</a>
 
 										<a ng-click="ChangeStateReport(report.id, report.state)" ng-if="report.state == 8">Entrega de propuestas</a>
 
@@ -59,13 +61,17 @@
 
 										<label ng-if="report.state == 10">Teminado</label>
 									</td>
+									<td>
+										<a ng-click="AssignedUser(report.id)" ng-if="report.state != 10">Usuario responsable</a>
+										<label ng-if="report.state == 10">-</label>
+									</td>
 								</tr>
 							</tbody>
 						</table>
 						<div class="row">
-							<!--div class="col-md-6" style="margin: 0 auto;float: none;">
+							<div class="col-md-6" style="margin: 0 auto;float: none;">
 								<pager prev="decrementPage()" next="incrementPage()" change-page="getReports({success:true,detail:'OK'},pagination.pages.current)" current="pagination.pages.current" total="pagination.pages.total"></pager>
-							</div-->
+							</div>
 						</div>
 					</div>
 				</section>
@@ -152,79 +158,6 @@
         </div>
 	</script>
 
-	<script type="text/ng-template" id="modalDownloadPdfs.html">
-		<div class="modal-header text-center">
-			<h3>Descargar PDF's</h3>
-			<h4>Seleccione los filtros para buscar los PDF's de reportes y descargar</h4>
-		</div>
-
-		<div class="modal-body">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="alert alert-{{modal.alert.color}}" ng-show="modal.alert.show"> <h4 class="text-md"><strong>{{modal.alert.title}}</strong></h4> {{modal.alert.text}} </div>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md-12">
-					<style>
-						.multiselect-parent,.dropdown-toggle,.dropdown-menu-form  {
-							width: 100%;
-						}
-					</style>
-
-					<form class="form-horizontal" role="form">
-						<div class="form-group">
-							<label class="col-sm-3 control-label">Creados entre</label>
-							<div class="col-sm-8">
-								<input style="cursor:pointer" id="daterangeDashGoals2" date-range-picker class="form-control date-picker" type="text" ng-model="modal.dateRange.date" ng-change="removeMessage()" options="modal.dateRange.options" />
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label">Cliente</label>
-							<div class="col-sm-8">
-								<select class="form-control" ng-options="client.name for client in modal.clients.list track by client.id" ng-model="modal.clients.selected" ng-change="removeMessage()"></select>
-								<!-- <div ng-dropdown-multiselect="" options="modal.clients.list" selected-model="modal.clients.selected" extra-settings="modal.dropdownMultiselect.settings" translation-texts="modal.dropdownMultiselect.texts" events="" ng-dropdown-multiselect-disabled=""></div> -->
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label">Ejecutores</label>
-							<div class="col-sm-8">
-								<!-- <select class="form-control" ng-options="executer.fullName for executer in creatorsUnique track by executer.id" ng-model="executerSelected"></select> -->
-								<div ng-dropdown-multiselect="" options="modal.executers.list" selected-model="modal.executers.selected" extra-settings="modal.dropdownMultiselect.settings" translation-texts="modal.dropdownMultiselect.texts" events="" ng-dropdown-multiselect-disabled=""></div>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label">Clase equipo</label>
-							<div class="col-sm-8">
-								<select class="form-control" ng-options="equipmentClass.name for equipmentClass in modal.classes.list track by equipmentClass.id" ng-model="modal.classes.selected" ng-change="removeMessage()"></select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label">Territorios</label>
-							<div class="col-sm-8">
-								<div ng-dropdown-multiselect="" options="modal.territories.list" selected-model="modal.territories.selected" extra-settings="modal.dropdownMultiselect.settings" translation-texts="modal.dropdownMultiselect.texts" events="" ng-dropdown-multiselect-disabled=""></div>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-3 control-label">Tipo de Actividad</label>
-							<div class="col-sm-8">
-								<select class="form-control" ng-options="activityType.name for activityType in activityTypesUnique track by activityType.id" ng-model="activityTypeSelected" ng-change="removeMessage()"></select>
-							</div>
-						</div>
-						
-					</form>
-				</div>
-			</div>
-		</div>
-
-		<div class="modal-footer">
-			<a class="btn bg-blue-ps btn-rounded-10 mb-10" id="zipBtn" ng-href="" ng-click="downloadZip()" ng-disabled="zipBtnDisabled"><i class="fa fa-cloud-download" uib-tooltip="Descargar PDF's"></i></a>
-			<button class="btn btn-cancelRecit btn-rounded-10 mb-10" type="button" ng-click="cancel()">Cerrar</button>
-		</div>
-
-	</script>
-
 	<script type="text/ng-template" id="modalDownloadPdfsByMonth.html">
 			<div class="modal-header text-center">
 				<h3>Descargar Excel de reportes</h3>
@@ -303,18 +236,92 @@
 
 	</script>
 
-	<script type="text/ng-template" id="removeModal.html" class="">
-	  <div class="modal-body text-gray">
-	    <div class="row">
-	      <div class="col-md-12">
-	        <h4 class="text-center">¿Seguro desea eliminar la inspección <strong>{{modal.inspection.title}}</strong>? </h4>
-	      </div>
-	    </div>
-	  </div>
-	  <div class="modal-footer">
-	  	<button class="btn btn-danger" ng-click="removeInspection({success: true,detail: 'OK'})">Si, eliminar</button>
-	  	<button class="btn btn-default" ng-click="cancel()">Cancelar</button>
-	  </div>
+	<script type="text/ng-template" id="AssignedUser.html">
+		<div class="modal-content">
+			<div class="modal-header ng-scope">
+            	<h3 class="modal-title custom-font" style="text-align: center;">Cambiar usuario responsable</h3>
+        	</div>
+         	<div class="modal-body ng-scope">
+         		<div class="alert alert-{{elements.alert.color}}" ng-show="elements.alert.show"> 
+         			<h4 class="text-md"><strong>{{elements.alert.title}}</strong></h4> {{elements.alert.text}} 
+         		</div>
+         		<div style="text-align: center;">
+         			<form class="form-horizontal form-validation" name="form" novalidate>
+	         			<div>
+		         			<label class="ng-binding" style="font-weight: 900;">Usuario:</label> 
+		         			<ui-select class="bg-white b-solid br-15" ng-model="usuarios.selected" close-on-select="true">
+		  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
+		  						<ui-select-choices repeat="user in usuarios.data" refresh-delay="200">
+		  							<div ng-bind-html="user.name"></div>
+		  						</ui-select-choices>
+		  					</ui-select>
+		  				</div>
+		  				<br>
+		  				<br>
+	         			<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" ng-disabled="form.$invalid" type="button" ng-click="asignarUsuario()" >{{elements.buttons.cambiar.text}}</button>
+	         		</form>
+         		</div>
+            </div>
+        </div>
+	</script>
+
+	<script type="text/ng-template" id="UpdateReport.html">
+		<div class="modal-content">
+			<div class="modal-header ng-scope">
+            	<h3 class="modal-title custom-font" style="text-align: center;">Actualizar reporte</h3>
+        	</div>
+         	<div class="modal-body ng-scope">
+         		<div class="alert alert-{{elements.alert.color}}" ng-show="elements.alert.show"> 
+         			<h4 class="text-md"><strong>{{elements.alert.title}}</strong></h4> {{elements.alert.text}} 
+         		</div>
+         		<div style="text-align: center;">
+	         		<form class="form-horizontal form-validation" name="form" novalidate>
+	         			<label class="ng-binding" style="font-weight: 900;">Nombre del proyecto:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Escriba nombre" ng-model="report.attributes.dynamic_attributes['64'].value" required>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Tipo de constructora:</label> 
+	         			<ui-select class="bg-white b-solid br-15" ng-model="report.attributes.dynamic_attributes['66'].selected" close-on-select="true">
+	  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
+	  						<ui-select-choices repeat="tipo in tipoConstructora.data | filter: {name: $select.search}" refresh-delay="200">
+	  							<div ng-bind-html="tipo.name"></div>
+	  						</ui-select-choices>
+	  					</ui-select>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Constructora:</label> 
+	         			<ui-select class="bg-white b-solid br-15" ng-model="report.attributes.dynamic_attributes['65'].selected" close-on-select="true">
+	  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
+	  						<ui-select-choices repeat="const in constructora.data | filter: {name: $select.search}" refresh-delay="200">
+	  							<div ng-bind-html="const.name"></div>
+	  						</ui-select-choices>
+	  					</ui-select>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Persona de contacto:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Escriba persona de contacto" ng-model="report.attributes.dynamic_attributes['68'].value" required>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Mail de contacto:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Escriba mail de contacto" ng-model="report.attributes.dynamic_attributes['69'].value" required>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Teléfono de contacto:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Escriba teléfono de contacto" ng-model="report.attributes.dynamic_attributes['70'].value" required>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Razón social del cliente:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Escriba razón social del cliente" ng-model="report.attributes.dynamic_attributes['71'].value" required>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">RUT del cliente:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Escriba RUT del cliente" ng-model="report.attributes.dynamic_attributes['72'].value" required>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Comentario:</label>
+	         			<textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" rows="5" placeholder="Comentario..." ng-model="report.attributes.dynamic_attributes['74'].value" aria-invalid="false" required></textarea>
+	         			<br>
+	         			<br>
+
+	         			<br>
+	     
+	         			<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" ng-disabled="form.$invalid" type="button" ng-click="updateReport()" >{{elements.buttons.agregar.text}}</button>
+					</form>
+         		</div>
+            </div>
+        </div>
 	</script>
 
 </div>

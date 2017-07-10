@@ -104,7 +104,7 @@ angular.module('adminProductsApp')
 
 		Users.query({
 			idUser: idUser,
-			include: 'role.organization.report_types.states.sections.data_parts.collection.collection_items,role.organization.roles'
+			include: 'role.organization'
 		}, function(success) {
 			$log.log(success);
 

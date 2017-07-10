@@ -33,7 +33,6 @@
 
         if (window.location.href.includes('efinding')) 
         {
-            console.error('efinding');
             var head  = document.getElementsByTagName('head')[0];
             var link  = document.createElement('link');
             link.rel  = 'stylesheet';
@@ -41,14 +40,9 @@
             link.href = 'https://s3-sa-east-1.amazonaws.com/etodo/efinding.css';
             link.media = 'all';
             head.appendChild(link);
-
-            var script = document.createElement('script');
-            script.src = 'https://s3-sa-east-1.amazonaws.com/etodo/pager.js';
-            document.head.appendChild(script);
         }
         else if (window.location.href.includes('echeckit')) 
         {
-            console.error('echeckit');
             var head  = document.getElementsByTagName('head')[0];
             var link  = document.createElement('link');
             link.rel  = 'stylesheet';
@@ -56,14 +50,9 @@
             link.href = 'https://s3-sa-east-1.amazonaws.com/etodo/echeckit.css';
             link.media = 'all';
             head.appendChild(link);
-
-            var script = document.createElement('script');
-            script.src = 'https://s3-sa-east-1.amazonaws.com/etodo/pagerEcheckit.js';
-            document.head.appendChild(script);
         }
         else 
         {
-            console.log('else');
             var head  = document.getElementsByTagName('head')[0];
             var link  = document.createElement('link');
             link.rel  = 'stylesheet';
@@ -71,10 +60,6 @@
             link.href = 'https://s3-sa-east-1.amazonaws.com/etodo/echeckit.css';
             link.media = 'all';
             head.appendChild(link);
-
-            var script = document.createElement('script');
-            script.src = 'https://s3-sa-east-1.amazonaws.com/etodo/pagerEcheckit.js';
-            document.head.appendChild(script);
         }
     </script>
   <body id="repoImagenes" class="{{main.settings.navbarHeaderColor}} {{main.settings.activeColor}} {{containerClass}} header-fixed aside-fixed" style="background-color: #F9FAFB;">
@@ -196,7 +181,7 @@
     <script src="scripts/directives/anchor-scroll.js"></script>
     <script src="scripts/directives/submitvalidate.js"></script>
     <script src="scripts/directives/file-model.js"></script>
-    <!--script src="scripts/directives/pager.js"></script-->
+    <script src="scripts/directives/pager.js"></script>
     <!--script src="scripts/directives/pagerEcheckit.js"></script-->
 
     <script src="scripts/controllers/pages-login.js"></script>
