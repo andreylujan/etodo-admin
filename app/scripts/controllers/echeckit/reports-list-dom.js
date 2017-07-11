@@ -548,10 +548,13 @@ angular.module('adminProductsApp')
 						name: success.included[i].attributes.name,
 						id: success.included[i].id
 					});
-					if ($scope.report.attributes.dynamic_attributes['66'].value == success.included[i].attributes.name) 
+					if ($scope.report.attributes.dynamic_attributes['66'] != undefined) 
 					{
-						$scope.report.attributes.dynamic_attributes['66'].selected = {id: success.included[i].id, 
-							name: success.included[i].attributes.name};
+						if ($scope.report.attributes.dynamic_attributes['66'].value == success.included[i].attributes.name) 
+						{
+							$scope.report.attributes.dynamic_attributes['66'].selected = {id: success.included[i].id, 
+								name: success.included[i].attributes.name};
+						}
 					}
 				}
 			} else {
@@ -578,10 +581,13 @@ angular.module('adminProductsApp')
 						id: success.included[i].id
 					});
 
-					if ($scope.report.attributes.dynamic_attributes['65'].value == success.included[i].attributes.name) 
+					if ($scope.report.attributes.dynamic_attributes['65'] != undefined) 
 					{
-						$scope.report.attributes.dynamic_attributes['65'].selected = {id: success.included[i].id, 
-							name: success.included[i].attributes.name};
+						if ($scope.report.attributes.dynamic_attributes['65'].value == success.included[i].attributes.name) 
+						{
+							$scope.report.attributes.dynamic_attributes['65'].selected = {id: success.included[i].id, 
+								name: success.included[i].attributes.name};
+						}
 					}
 				}
 			}
@@ -716,6 +722,14 @@ angular.module('adminProductsApp')
 	    $scope.report.attributes = data.object.attributes;
 	    $scope.getCollectionTipo();
 	    $scope.getCollectionConstructora();
+	    if ($scope.report.attributes.dynamic_attributes['73'].value == 'true') 
+	    {
+	    	$scope.report.attributes.dynamic_attributes['73'].value = true;
+	    }
+	    else
+	    {
+	    	$scope.report.attributes.dynamic_attributes['73'].value = false;
+	    }
 	});
 })
 
@@ -877,8 +891,6 @@ angular.module('adminProductsApp')
 	$scope.report = {
 		id: idReport,
 		montoOferta: 
-			{ text: '' },
-		descuento: 	
 			{ text: '' },
 		propuestaEntregada: 
 			{ value: false },
