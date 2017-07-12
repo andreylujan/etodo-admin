@@ -601,6 +601,23 @@ angular.module('adminProductsApp')
 		});
 	};
 
+	$scope.formatRut = function(rut) {
+
+		if (Validators.validateRutCheckDigit(rut)) {
+			$scope.report.attributes.dynamic_attributes['72'].value = Utils.formatRut(rut);
+			$scope.elements.alert.color = '';
+	 		$scope.elements.alert.title = '';
+	 		$scope.elements.alert.text 	= '';
+	 		$scope.elements.alert.show 	= false;
+		} else {
+			$scope.elements.alert.color = 'danger';
+		 	$scope.elements.alert.title = 'Rut no válido';
+		 	$scope.elements.alert.text 	= '';
+		 	$scope.elements.alert.show = true;
+		}
+
+	};
+
 
 	$scope.updateReport = function() 
 	{
@@ -608,6 +625,16 @@ angular.module('adminProductsApp')
  		$scope.elements.alert.title = '';
  		$scope.elements.alert.text 	= '';
  		$scope.elements.alert.show 	= false;
+ 		$log.error($scope.report.attributes.dynamic_attributes['72'].value);
+
+ 		if (!Validators.validateRutCheckDigit($scope.report.attributes.dynamic_attributes['72'].value)) {
+		 	$scope.elements.alert.color = 'danger';
+		 	$scope.elements.alert.title = 'Rut no válido';
+		 	$scope.elements.alert.text 	= '';
+		 	$scope.elements.alert.show = true;
+		 	Utils.gotoAnyPartOfPage('pageHeader');
+		 	return;
+		 }
 
  		//LLAMA SERVICIO PARA CERRAR NEGOCIO
  		$scope.editarReport(function (data) {
@@ -627,6 +654,7 @@ angular.module('adminProductsApp')
 						$scope.elements.alert.text 	= datos.error.detail;
 						$scope.elements.alert.color = 'danger';
 						$scope.elements.alert.show 	= true;
+						Utils.gotoAnyPartOfPage('pageHeader');
 		        	}
 			    })
         	}
@@ -636,6 +664,7 @@ angular.module('adminProductsApp')
 				$scope.elements.alert.text 	= data.error.detail;
 				$scope.elements.alert.color = 'danger';
 				$scope.elements.alert.show 	= true;
+				Utils.gotoAnyPartOfPage('pageHeader');
         	}
 	    });
 

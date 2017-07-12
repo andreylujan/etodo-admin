@@ -296,7 +296,7 @@
 	         			<input type="text" class="form-control rounded" placeholder="Escriba persona de contacto" ng-model="report.attributes.dynamic_attributes['68'].value" required>
 	         			<br>
 	         			<label class="ng-binding" style="font-weight: 900;">Mail de contacto:</label>
-	         			<input type="text" class="form-control rounded" placeholder="Escriba mail de contacto" ng-model="report.attributes.dynamic_attributes['69'].value" required>
+	         			<input type="email" class="form-control rounded" placeholder="Escriba mail de contacto" ng-model="report.attributes.dynamic_attributes['69'].value" required>
 	         			<br>
 	         			<label class="ng-binding" style="font-weight: 900;">Teléfono de contacto:</label>
 	         			<input type="text" class="form-control rounded" placeholder="Escriba teléfono de contacto" ng-model="report.attributes.dynamic_attributes['70'].value" required>
@@ -305,7 +305,7 @@
 	         			<input type="text" class="form-control rounded" placeholder="Escriba razón social del cliente" ng-model="report.attributes.dynamic_attributes['71'].value" required>
 	         			<br>
 	         			<label class="ng-binding" style="font-weight: 900;">RUT del cliente:</label>
-	         			<input type="text" class="form-control rounded" placeholder="Escriba RUT del cliente" ng-model="report.attributes.dynamic_attributes['72'].value" required>
+	         			<input type="text" class="form-control rounded" placeholder="Escriba RUT del cliente" ng-model="report.attributes.dynamic_attributes['72'].value" ng-blur="formatRut(report.attributes.dynamic_attributes['72'].value)" required>
 	         			<br>
 	         			<label class="ng-binding" style="font-weight: 900;">Planos enviados:</label>
 	         			<label class="checkbox checkbox-custom"> 
