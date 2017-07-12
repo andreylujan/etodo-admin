@@ -416,12 +416,6 @@ angular.module('adminProductsApp')
 	};
 
 	$scope.ChangeStateReport = function(idReport, idState) {
-
-		/*
-		$log.error(idReport);
-		$log.error(idState);
-		*/
-
 		var template = '';
 		var controller = '';
 
@@ -446,6 +440,53 @@ angular.module('adminProductsApp')
 				},
 				idState: function() {
 					return idState;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(datos) {
+			if (datos.action === 'close') {
+				$scope.getReports({
+					success: true,
+					detail: 'OK'
+				}, $scope.pagination.pages.current, $scope.filter);
+			}
+			$scope.tableParams.reload();
+		}, function() {});
+	};
+
+	$scope.AssignedUser = function(idReport) {
+		var modalInstance = $uibModal.open({
+			animation: true,
+			templateUrl: 'AssignedUser.html',
+			controller: 'AssignedUserInstance',
+			resolve: {
+				idReport: function() {
+					return idReport;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(datos) {
+			if (datos.action === 'close') {
+				$scope.getReports({
+					success: true,
+					detail: 'OK'
+				}, $scope.pagination.pages.current, $scope.filter);
+			}
+			$scope.tableParams.reload();
+		}, function() {});
+	};
+
+	$scope.UpdateReport = function(idReport) {
+
+		var modalInstance = $uibModal.open({
+			animation: true,
+			templateUrl: 'UpdateReport.html',
+			controller: 'UpdateReportInstance',
+			resolve: {
+				idReport: function() {
+					return idReport;
 				}
 			}
 		});
