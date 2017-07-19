@@ -640,23 +640,10 @@ angular.module('adminProductsApp')
  		$scope.editarReport(function (data) {
 	        if(data.success) 
 	        {
-            	$scope.stateChangeWS(function (datos) {
-			        if(datos.success) 
-			        {
-		            	$uibModalInstance.close({
-							action: 'close',
-							success: datos.success
-						});
-		        	}
-		        	else
-		        	{
-		        		$scope.elements.alert.title = datos.error.title;
-						$scope.elements.alert.text 	= datos.error.detail;
-						$scope.elements.alert.color = 'danger';
-						$scope.elements.alert.show 	= true;
-						Utils.gotoAnyPartOfPage('pageHeader');
-		        	}
-			    })
+            	$uibModalInstance.close({
+					action: 'close',
+					success: data.success
+				});
         	}
         	else
         	{
