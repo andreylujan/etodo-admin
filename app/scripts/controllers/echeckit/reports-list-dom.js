@@ -1292,9 +1292,9 @@ angular.module('adminProductsApp')
 	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
 	$scope.negocioCerrado = function (callback) {
 		$scope.dynamic_attributes['60'] = { value: $scope.report.cierreNegocio.value };
-		$scope.dynamic_attributes['61'] = { text: $scope.motivoPerdida.selected.name, id: $scope.motivoPerdida.selected.id };
-		$scope.dynamic_attributes['63'] = { text: $scope.report.montoCierre.text };
-		$scope.dynamic_attributes['62'] = { text: $scope.report.comentario.text };
+		$scope.dynamic_attributes['61'] = { value: $scope.motivoPerdida.selected.name, id: $scope.motivoPerdida.selected.id };
+		$scope.dynamic_attributes['63'] = { value: $scope.report.montoCierre.text };
+		$scope.dynamic_attributes['62'] = { value: $scope.report.comentario.text };
 
 		var aux = {};
 		aux = 
