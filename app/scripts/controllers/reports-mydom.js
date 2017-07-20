@@ -9,7 +9,7 @@
  */
 angular.module('adminProductsApp')
 
-.controller('ReportsListMyDomEcheckitCtrl', function($scope, $log, $filter, $window, $timeout, $uibModal, NgTableParams, ReportsMine, Activities, Utils) {
+.controller('ReportsListMyDomEcheckitCtrl', function($scope, $log, $filter, $window, $timeout, $uibModal, NgTableParams, ReportsMine, Utils) {
 
 	$scope.page = {
 		title: 'Lista de mis reportes DOM',
