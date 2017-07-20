@@ -163,8 +163,16 @@ angular.module('adminProductsApp')
 				for (var j = 0; j < $scope.columns2.length; j++) {
 					test[test.length - 1]['pdf'] 			= success.data[i].attributes.pdf;
 					test[test.length - 1]['pdfUploaded'] 	= success.data[i].attributes.pdf_uploaded;
-					test[test.length - 1]['state'] = success.data[i].attributes.state_id;
-					test[test.length - 1]['id'] = success.data[i].id;
+					test[test.length - 1]['state'] 			= success.data[i].attributes.state_id;
+					test[test.length - 1]['id'] 			= success.data[i].id;
+					test[test.length - 1]['negocio'] 		= '';
+
+					if (success.data[i].attributes.dynamic_attributes['60'] != undefined) 
+					{
+						test[test.length - 1]['negocio'] 		= success.data[i].attributes.dynamic_attributes['60'].value;
+					}
+
+					//if (success.data[i].dynamic_attributes) {}
 					//no tiene relacion o es un objeto de consulta directa al dato
 					if (success.data[i].attributes[$scope.columns2[j].field]) {
 						test[test.length - 1][$scope.columns2[j].field_a] = success.data[i].attributes[$scope.columns2[j].field];
@@ -326,7 +334,6 @@ angular.module('adminProductsApp')
 			}
 			reportes = test;
 
-
 			$scope.tableParams = new NgTableParams({
 				page: 1, // show first page
 				count: reportes.length // count per page
@@ -415,47 +422,6 @@ angular.module('adminProductsApp')
 		}
 	};
 
-	$scope.ChangeStateReport = function(idReport, idState) {
-
-		var template = '';
-		var controller = '';
-
-		if (idState == 8) 
-		{
-			template 	= 'AgregarPropuesta.html';
-			controller 	= 'AgregarPropuestaInstance';
-		}
-		else if(idState == 9)
-		{
-			template 	= 'CierreDeNegocio.html';
-			controller 	= 'CierreDeNegocioInstance';
-		}
-
-		var modalInstance = $uibModal.open({
-			animation: true,
-			templateUrl: template,
-			controller: controller,
-			resolve: {
-				idReport: function() {
-					return idReport;
-				},
-				idState: function() {
-					return idState;
-				}
-			}
-		});
-
-		modalInstance.result.then(function(datos) {
-			if (datos.action === 'close') {
-				$scope.getReports({
-					success: true,
-					detail: 'OK'
-				}, $scope.pagination.pages.current, $scope.filter);
-			}
-			$scope.tableParams.reload();
-		}, function() {});
-	};
-
 	$scope.AssignedUser = function(idReport) {
 
 		var modalInstance = $uibModal.open({
@@ -504,6 +470,292 @@ angular.module('adminProductsApp')
 		}, function() {});
 	};
 
+
+	$scope.ChangeStateReport = function(idReport, idState) {
+
+		var template = '';
+		var controller = '';
+
+		if (idState == 8) 
+		{
+			template 	= 'AgregarPropuesta.html';
+			controller 	= 'AgregarPropuestaInstance';
+		}
+		else if(idState == 9)
+		{
+			template 	= 'CierreDeNegocio.html';
+			controller 	= 'CierreDeNegocioInstance';
+		}
+
+		var modalInstance = $uibModal.open({
+			animation: true,
+			templateUrl: template,
+			controller: controller,
+			resolve: {
+				idReport: function() {
+					return idReport;
+				},
+				idState: function() {
+					return idState;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(datos) {
+			if (datos.action === 'close') {
+				$scope.getReports({
+					success: true,
+					detail: 'OK'
+				}, $scope.pagination.pages.current, $scope.filter);
+			}
+			if (datos.action === 'cierreNegocio') 
+			{
+				$scope.ChangeStateReport(idReport, datos.data.attributes.state_id);
+			}
+			$scope.tableParams.reload();
+		}, function() {});
+	};
+
+})
+
+.controller('AgregarPropuestaInstance', function($scope, $log, $uibModalInstance, idReport, idState, Validators, Utils, Reports) {
+	$scope.report = {
+		id: idReport,
+		montoOferta: 
+			{ value: '' },
+		version: 
+			{ value: '' },
+		comentario: 
+			{ value: '' }
+	},
+	$scope.dynamic_attributes = [];
+
+	$scope.elements = {
+		buttons: {
+			agregar: {
+				text: 'Guardar propuesta.',
+				border: 'btn-border',
+				disabled: true
+			},
+			guardar: {
+				text: 'Negocio cerrado.',
+				border: 'btn-border',
+				disabled: true
+			}
+		},
+		title: '',
+		alert: {
+			show: false,
+			title: '',
+			text: '',
+			color: '',
+		}
+	};
+
+	$scope.agregarPropuesta = function() 
+	{
+		//METODO QUE AGREGA UNA PROPUESTA
+		$scope.elements.alert.color = '';
+ 		$scope.elements.alert.title = '';
+ 		$scope.elements.alert.text 	= '';
+ 		$scope.elements.alert.show 	= false;
+
+ 		if (!Validators.validateRequiredField($scope.report.montoOferta.value)) {
+ 			$scope.elements.alert.color = 'danger';
+ 			$scope.elements.alert.title = 'Faltan campos por seleccionar';
+ 			$scope.elements.alert.text 	= 'Debe ingresar un monto de presupuesto';
+ 			$scope.elements.alert.show 	= true;
+ 			Utils.gotoAnyPartOfPage('pageHeader');
+ 			return;
+ 		}
+ 		if (!Validators.validateRequiredField($scope.report.version.value)) {
+ 			$scope.elements.alert.color = 'danger';
+ 			$scope.elements.alert.title = 'Faltan campos por seleccionar';
+ 			$scope.elements.alert.text 	= 'Debe ingresar la versión del presupuesto';
+ 			$scope.elements.alert.show 	= true;
+ 			Utils.gotoAnyPartOfPage('pageHeader');
+ 			return;
+ 		}
+ 		if (!Validators.validateRequiredField($scope.report.comentario.value)) {
+ 			$scope.elements.alert.color = 'danger';
+ 			$scope.elements.alert.title = 'Faltan campos por seleccionar';
+ 			$scope.elements.alert.text 	= 'Debe ingresar un comentario';
+ 			$scope.elements.alert.show 	= true;
+ 			Utils.gotoAnyPartOfPage('pageHeader');
+ 			return;
+ 		}
+
+
+ 		//LLAMA SERVICIO PARA AGREGAR PROPUESTA;
+		$scope.agregarPropuestaWS(function (data) {
+	        if(data.success) 
+	        {
+            	$scope.elements.alert.title = 'Se ingreso la propuesta exitosamente.';
+				$scope.elements.alert.text 	= '';
+				$scope.elements.alert.color = 'success';
+				$scope.elements.alert.show 	= true;
+        	}
+        	else
+        	{
+        		$scope.elements.alert.title = data.error.title;
+				$scope.elements.alert.text 	= data.error.detail;
+				$scope.elements.alert.color = 'danger';
+				$scope.elements.alert.show 	= true;
+        	}
+	    });
+	};
+
+	$scope.finalizarPropuesta = function() 
+	{
+		//METODO QUE AGREGA UNA PROPUESTA Y PASA AL SIGUIENTE ESTADO
+		$scope.elements.alert.color = '';
+ 		$scope.elements.alert.title = '';
+ 		$scope.elements.alert.text 	= '';
+ 		$scope.elements.alert.show 	= false;
+
+ 		if (!Validators.validateRequiredField($scope.report.montoOferta.value)) {
+ 			$scope.elements.alert.color = 'danger';
+ 			$scope.elements.alert.title = 'Faltan campos por seleccionar';
+ 			$scope.elements.alert.text 	= 'Debe ingresar un monto de oferta';
+ 			$scope.elements.alert.show 	= true;
+ 			Utils.gotoAnyPartOfPage('pageHeader');
+ 			return;
+ 		}
+ 		if (!Validators.validateRequiredField($scope.report.version.value)) {
+ 			$scope.elements.alert.color = 'danger';
+ 			$scope.elements.alert.title = 'Faltan campos por seleccionar';
+ 			$scope.elements.alert.text 	= 'Debe ingresar la versión del presupuesto';
+ 			$scope.elements.alert.show 	= true;
+ 			Utils.gotoAnyPartOfPage('pageHeader');
+ 			return;
+ 		}
+ 		if (!Validators.validateRequiredField($scope.report.comentario.value)) {
+ 			$scope.elements.alert.color = 'danger';
+ 			$scope.elements.alert.title = 'Faltan campos por seleccionar';
+ 			$scope.elements.alert.text 	= 'Debe ingresar un comentario';
+ 			$scope.elements.alert.show 	= true;
+ 			Utils.gotoAnyPartOfPage('pageHeader');
+ 			return;
+ 		}
+
+ 		//LLAMA SERVICIO DE AGREGAR PROPUESTA Y CAMBIAR DE ESTADO
+		$scope.agregarPropuestaWS(function (data) {
+	        if(data.success) 
+	        {
+            	$scope.stateChangeWS(function (datos) {
+			        if(datos.success) 
+			        {
+		            	$uibModalInstance.close({
+							action: 'cierreNegocio',
+							success: datos.success,
+							data: datos.data
+						});
+		        	}
+		        	else
+		        	{
+		        		$scope.elements.alert.title = datos.error.title;
+						$scope.elements.alert.text 	= datos.error.detail;
+						$scope.elements.alert.color = 'danger';
+						$scope.elements.alert.show 	= true;
+		        	}
+			    })
+        	}
+        	else
+        	{
+        		$scope.elements.alert.title = data.error.title;
+				$scope.elements.alert.text 	= data.error.detail;
+				$scope.elements.alert.color = 'danger';
+				$scope.elements.alert.show 	= true;
+        	}
+	    });
+	};
+
+	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
+	$scope.getOneReport = function (callback) {
+
+		Reports.query(
+			{idReport: idReport }, 
+			function(success) {
+				callback({success: true, object: success.data});
+			}, function(error) {
+				callback({success: false, error: error.data.errors[0]});
+			}
+		);
+	}
+
+	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
+	$scope.agregarPropuestaWS = function (callback) {
+		
+		if ($scope.dynamic_attributes['58'] == undefined) 
+		{
+			$scope.dynamic_attributes['58'] = [];
+		}
+
+		$scope.dynamic_attributes['58'].push({
+			54: { value: $scope.report.montoOferta.value },
+			56: { value: $scope.report.comentario.value },
+			59: { value: $scope.report.version.value } 
+		});
+
+		var aux = {};
+		aux = {  data: { type: 'reports', id: idReport, attributes: 
+					{ 
+						dynamic_attributes: $scope.dynamic_attributes,
+						pdf: null,
+    	   				pdf_uploaded: false
+					}, 
+					relationships: { } } , idReport: idReport 
+		};
+
+		Reports.update(aux, 
+			function(success) {
+				$scope.report.montoOferta.value = '';
+				$scope.report.comentario.value 	= '';
+				$scope.report.version.value 	= '';
+				callback({success: true});
+			}, function(error) {
+				callback({success: false, error: error.data.errors[0]});
+			}
+		);
+	}
+
+	//LLAMA AL SERVICIO PARA CAMBIAR DE ESTADO
+	$scope.stateChangeWS = function (callback) {
+		var aux = {};
+		aux = 
+		{  
+			data: 
+			{ 
+				type: 'reports', 
+				id: idReport,
+				relationships: 
+				{
+					state: 
+					{
+						data:
+						{
+							type: 'states',
+							id: '9' 
+						}
+					} 
+				} 
+			} , idReport: idReport 
+		};
+
+		Reports.update(aux, 
+			function(success) {
+				callback({success: true, data: success.data});
+			}, function(error) {
+				callback({success: false, error: error.data.errors[0]});
+			}
+		);
+	}
+
+
+	//VA A BUSCAR EL DETALLE DE UN REPORTE
+	$scope.getOneReport(function (data) {
+	    $scope.dynamic_attributes = data.object.attributes.dynamic_attributes;
+	});
 })
 
 .controller('UpdateReportInstance', function($scope, $log, $uibModalInstance, idReport, Validators, Utils, Reports, Collection) {
@@ -630,11 +882,82 @@ angular.module('adminProductsApp')
  		if (!Validators.validateRutCheckDigit($scope.report.attributes.dynamic_attributes['72'].value)) {
 		 	$scope.elements.alert.color = 'danger';
 		 	$scope.elements.alert.title = 'Rut no válido';
-		 	$scope.elements.alert.text 	= '';
+		 	$scope.elements.alert.text 	= 'Debe ingresar un rut con formato 12.345.678-9';
 		 	$scope.elements.alert.show = true;
 		 	Utils.gotoAnyPartOfPage('pageHeader');
 		 	return;
-		 }
+		}
+		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['64'].value)) {
+			$scope.elements.alert.color = 'danger';
+			$scope.elements.alert.title = 'Faltan campos por completar';
+			$scope.elements.alert.text 	= 'Nombre del proyecto';
+			$scope.elements.alert.show 	= true;
+			Utils.gotoAnyPartOfPage('pageHeader');
+			return;
+		}
+
+		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['66'].selected.name)) {
+			$scope.elements.alert.color = 'danger';
+			$scope.elements.alert.title = 'Faltan campos por completar';
+			$scope.elements.alert.text 	= 'Tipo de constructora';
+			$scope.elements.alert.show 	= true;
+			Utils.gotoAnyPartOfPage('pageHeader');
+			return;
+		}
+
+		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['65'].selected.name)) {
+			$scope.elements.alert.color = 'danger';
+			$scope.elements.alert.title = 'Faltan campos por completar';
+			$scope.elements.alert.text 	= 'Constructora';
+			$scope.elements.alert.show 	= true;
+			Utils.gotoAnyPartOfPage('pageHeader');
+			return;
+		}
+
+		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['68'].value)) {
+			$scope.elements.alert.color = 'danger';
+			$scope.elements.alert.title = 'Faltan campos por completar';
+			$scope.elements.alert.text 	= 'Persona de contacto';
+			$scope.elements.alert.show 	= true;
+			Utils.gotoAnyPartOfPage('pageHeader');
+			return;
+		}
+
+		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['69'].value)) {
+			$scope.elements.alert.color = 'danger';
+			$scope.elements.alert.title = 'Faltan campos por completar';
+			$scope.elements.alert.text 	= 'Mail de contacto';
+			$scope.elements.alert.show 	= true;
+			Utils.gotoAnyPartOfPage('pageHeader');
+			return;
+		}
+
+		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['70'].value)) {
+			$scope.elements.alert.color = 'danger';
+			$scope.elements.alert.title = 'Faltan campos por completar';
+			$scope.elements.alert.text 	= 'Teléfono de contacto';
+			$scope.elements.alert.show 	= true;
+			Utils.gotoAnyPartOfPage('pageHeader');
+			return;
+		}
+
+		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['71'].value)) {
+			$scope.elements.alert.color = 'danger';
+			$scope.elements.alert.title = 'Faltan campos por completar';
+			$scope.elements.alert.text 	= 'Razón social del cliente';
+			$scope.elements.alert.show 	= true;
+			Utils.gotoAnyPartOfPage('pageHeader');
+			return;
+		}
+
+		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['72'].value)) {
+			$scope.elements.alert.color = 'danger';
+			$scope.elements.alert.title = 'Faltan campos por completar';
+			$scope.elements.alert.text 	= 'RUT del cliente';
+			$scope.elements.alert.show 	= true;
+			Utils.gotoAnyPartOfPage('pageHeader');
+			return;
+		}
 
  		//LLAMA SERVICIO PARA CERRAR NEGOCIO
  		$scope.editarReport(function (data) {
@@ -672,7 +995,9 @@ angular.module('adminProductsApp')
 				type: 'reports', 
 				id: idReport, 
 				attributes: {
-					dynamic_attributes: $scope.report.attributes.dynamic_attributes 
+					dynamic_attributes: $scope.report.attributes.dynamic_attributes,
+					pdf: null,
+    	   			pdf_uploaded: false
 				}, 
 				relationships: { } 
 			}, 
@@ -903,224 +1228,6 @@ angular.module('adminProductsApp')
 	});
 })
 
-.controller('AgregarPropuestaInstance', function($scope, $log, $uibModalInstance, idReport, idState, Validators, Utils, Reports) {
-	$scope.report = {
-		id: idReport,
-		montoOferta: 
-			{ text: '' },
-		propuestaEntregada: 
-			{ value: false },
-		comentario: 
-			{ text: '' }
-	},
-	$scope.dynamic_attributes = [];
-
-	$scope.elements = {
-		buttons: {
-			agregar: {
-				text: 'Guardar propuesta.',
-				border: 'btn-border',
-				disabled: true
-			},
-			guardar: {
-				text: 'Finalizar entrega de propuestas.',
-				border: 'btn-border',
-				disabled: true
-			}
-		},
-		title: '',
-		alert: {
-			show: false,
-			title: '',
-			text: '',
-			color: '',
-		}
-	};
-
-	$scope.agregarPropuesta = function() 
-	{
-		//METODO QUE AGREGA UNA PROPUESTA
-		$scope.elements.alert.color = '';
- 		$scope.elements.alert.title = '';
- 		$scope.elements.alert.text 	= '';
- 		$scope.elements.alert.show 	= false;
-
- 		if (!Validators.validateRequiredField($scope.report.montoOferta.text)) {
- 			$scope.elements.alert.color = 'danger';
- 			$scope.elements.alert.title = 'Faltan campos por seleccionar';
- 			$scope.elements.alert.text 	= 'Debe ingresar un monto de oferta';
- 			$scope.elements.alert.show 	= true;
- 			Utils.gotoAnyPartOfPage('pageHeader');
- 			return;
- 		}
- 		if (!Validators.validateRequiredField($scope.report.comentario.text)) {
- 			$scope.elements.alert.color = 'danger';
- 			$scope.elements.alert.title = 'Faltan campos por seleccionar';
- 			$scope.elements.alert.text 	= 'Debe ingresar un comentario';
- 			$scope.elements.alert.show 	= true;
- 			Utils.gotoAnyPartOfPage('pageHeader');
- 			return;
- 		}
-
-
- 		//LLAMA SERVICIO PARA AGREGAR PROPUESTA;
-		$scope.agregarPropuestaWS(function (data) {
-	        if(data.success) 
-	        {
-            	$scope.elements.alert.title = 'Se ingreso la propuesta exitosamente.';
-				$scope.elements.alert.text 	= '';
-				$scope.elements.alert.color = 'success';
-				$scope.elements.alert.show 	= true;
-        	}
-        	else
-        	{
-        		$scope.elements.alert.title = data.error.title;
-				$scope.elements.alert.text 	= data.error.detail;
-				$scope.elements.alert.color = 'danger';
-				$scope.elements.alert.show 	= true;
-        	}
-	    });
-	};
-
-	$scope.finalizarPropuesta = function() 
-	{
-		//METODO QUE AGREGA UNA PROPUESTA Y PASA AL SIGUIENTE ESTADO
-		$scope.elements.alert.color = '';
- 		$scope.elements.alert.title = '';
- 		$scope.elements.alert.text 	= '';
- 		$scope.elements.alert.show 	= false;
-
- 		if (!Validators.validateRequiredField($scope.report.montoOferta.text)) {
- 			$scope.elements.alert.color = 'danger';
- 			$scope.elements.alert.title = 'Faltan campos por seleccionar';
- 			$scope.elements.alert.text 	= 'Debe ingresar un monto de oferta';
- 			$scope.elements.alert.show 	= true;
- 			Utils.gotoAnyPartOfPage('pageHeader');
- 			return;
- 		}
- 		if (!Validators.validateRequiredField($scope.report.comentario.text)) {
- 			$scope.elements.alert.color = 'danger';
- 			$scope.elements.alert.title = 'Faltan campos por seleccionar';
- 			$scope.elements.alert.text 	= 'Debe ingresar un comentario';
- 			$scope.elements.alert.show 	= true;
- 			Utils.gotoAnyPartOfPage('pageHeader');
- 			return;
- 		}
-
- 		//LLAMA SERVICIO DE AGREGAR PROPUESTA Y CAMBIAR DE ESTADO
-		$scope.agregarPropuestaWS(function (data) {
-	        if(data.success) 
-	        {
-            	$scope.stateChangeWS(function (datos) {
-			        if(datos.success) 
-			        {
-		            	$uibModalInstance.close({
-							action: 'close',
-							success: datos.success
-						});
-		        	}
-		        	else
-		        	{
-		        		$scope.elements.alert.title = datos.error.title;
-						$scope.elements.alert.text 	= datos.error.detail;
-						$scope.elements.alert.color = 'danger';
-						$scope.elements.alert.show 	= true;
-		        	}
-			    })
-        	}
-        	else
-        	{
-        		$scope.elements.alert.title = data.error.title;
-				$scope.elements.alert.text 	= data.error.detail;
-				$scope.elements.alert.color = 'danger';
-				$scope.elements.alert.show 	= true;
-        	}
-	    });
-	};
-
-	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
-	$scope.getOneReport = function (callback) {
-
-		Reports.query(
-			{idReport: idReport }, 
-			function(success) {
-				callback({success: true, object: success.data});
-			}, function(error) {
-				callback({success: false, error: error.data.errors[0]});
-			}
-		);
-	}
-
-	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
-	$scope.agregarPropuestaWS = function (callback) {
-		
-		if ($scope.dynamic_attributes['58'] == undefined) 
-		{
-			$scope.dynamic_attributes['58'] = [];
-		}
-
-		$scope.dynamic_attributes['58'].push({
-			54: { text: $scope.report.montoOferta.text },
-			56: { text: $scope.report.comentario.text },
-			59: { value: $scope.report.propuestaEntregada.value } 
-		});
-
-		var aux = {};
-		aux = {  data: { type: 'reports', id: idReport, attributes: 
-					{ 
-						dynamic_attributes: $scope.dynamic_attributes
-					}, 
-					relationships: { } } , idReport: idReport 
-		};
-
-		Reports.update(aux, 
-			function(success) {
-				callback({success: true});
-			}, function(error) {
-				callback({success: false, error: error.data.errors[0]});
-			}
-		);
-	}
-
-	//LLAMA AL SERVICIO PARA CAMBIAR DE ESTADO
-	$scope.stateChangeWS = function (callback) {
-		var aux = {};
-		aux = 
-		{  
-			data: 
-			{ 
-				type: 'reports', 
-				id: idReport,
-				relationships: 
-				{
-					state: 
-					{
-						data:
-						{
-							type: 'states',
-							id: '9' 
-						}
-					} 
-				} 
-			} , idReport: idReport 
-		};
-
-		Reports.update(aux, 
-			function(success) {
-				callback({success: true});
-			}, function(error) {
-				callback({success: false, error: error.data.errors[0]});
-			}
-		);
-	}
-
-
-	//VA A BUSCAR EL DETALLE DE UN REPORTE
-	$scope.getOneReport(function (data) {
-	    $scope.dynamic_attributes = data.object.attributes.dynamic_attributes;
-	});
-})
-
 .controller('CierreDeNegocioInstance', function($scope, $log, $uibModalInstance, idReport, idState, Validators, Reports, Utils, Collection) {
 
 	$scope.report = {
@@ -1128,9 +1235,9 @@ angular.module('adminProductsApp')
 		cierreNegocio: 
 			{ value: false },
 		montoCierre: 
-			{ text: '' },
+			{ value: '' },
 		comentario: 
-			{ text: '' }
+			{ value: '' }
 	},
 	$scope.dynamic_attributes = [];
 
@@ -1195,7 +1302,7 @@ angular.module('adminProductsApp')
 
  		if ($scope.report.cierreNegocio.value) 
  		{
- 			if (!Validators.validateRequiredField($scope.report.montoCierre.text)) {
+ 			if (!Validators.validateRequiredField($scope.report.montoCierre.value)) {
 	 			$scope.elements.alert.color = 'danger';
 	 			$scope.elements.alert.title = 'Faltan campos por seleccionar';
 	 			$scope.elements.alert.text 	= 'Debe ingresar un monto de cierre';
@@ -1216,7 +1323,7 @@ angular.module('adminProductsApp')
  			}
  		}
 
- 		if (!Validators.validateRequiredField($scope.report.comentario.text)) {
+ 		if (!Validators.validateRequiredField($scope.report.comentario.value)) {
  			$scope.elements.alert.color = 'danger';
  			$scope.elements.alert.title = 'Faltan campos por seleccionar';
  			$scope.elements.alert.text 	= 'Debe ingresar un comentario';
@@ -1293,8 +1400,8 @@ angular.module('adminProductsApp')
 	$scope.negocioCerrado = function (callback) {
 		$scope.dynamic_attributes['60'] = { value: $scope.report.cierreNegocio.value };
 		$scope.dynamic_attributes['61'] = { value: $scope.motivoPerdida.selected.name, id: $scope.motivoPerdida.selected.id };
-		$scope.dynamic_attributes['63'] = { value: $scope.report.montoCierre.text };
-		$scope.dynamic_attributes['62'] = { value: $scope.report.comentario.text };
+		$scope.dynamic_attributes['63'] = { value: $scope.report.montoCierre.value };
+		$scope.dynamic_attributes['62'] = { value: $scope.report.comentario.value };
 
 		var aux = {};
 		aux = 
@@ -1305,7 +1412,8 @@ angular.module('adminProductsApp')
 				id: idReport, 
 				attributes: 
 				{ 
-					dynamic_attributes: $scope.dynamic_attributes 
+					dynamic_attributes: $scope.dynamic_attributes,
+
 				}, 
 				relationships: { } 
 			}, 

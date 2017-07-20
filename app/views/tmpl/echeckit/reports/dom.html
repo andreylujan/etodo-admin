@@ -59,7 +59,8 @@
 
 										<a ng-click="ChangeStateReport(report.id, report.state)" ng-if="report.state == 9">Cierre de negocio</a>
 
-										<label ng-if="report.state == 10">Teminado</label>
+										<label ng-if="report.state == 10 && report.negocio == true">Negocio Ganado</label>
+										<label ng-if="report.state == 10 && report.negocio == false">Negocio Perdido</label>
 									</td>
 									<td>
 										<a ng-click="AssignedUser(report.id)" ng-if="report.state != 10">Usuario responsable</a>
@@ -90,19 +91,19 @@
          		</div>
          		<div style="text-align: center;">
 	         		<form class="form-horizontal form-validation" name="form" novalidate>
-	         			<label class="ng-binding" style="font-weight: 900;">Monto de Oferta entregado:</label>
-	         			<input type="number" class="form-control rounded" placeholder="Monto de oferta entregado..." ng-model="report.montoOferta.text" required>
+	         			<label class="ng-binding" style="font-weight: 900;">Monto Oferta de presupuesto:</label>
+	         			<input type="number" class="form-control rounded" placeholder="Monto de oferta entregado..." ng-model="report.montoOferta.value" required>
 	         			<br>
-	         			<label class="ng-binding" style="font-weight: 900;">Propuesta entregada:</label>
-	         			<label class="checkbox checkbox-custom"> 
-	         				<input type="checkbox" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-not-empty" ng-model="report.propuestaEntregada.value" aria-invalid="false" style="">
-	         				<i></i>
-	         			</label>
+
+	         			<label class="ng-binding" style="font-weight: 900;">Versión presupuesto:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Version de presupuesto..." ng-model="report.version.value" required>
+	         			<br>
+
 	         			<label class="ng-binding" style="font-weight: 900;">Comentario:</label>
-	         			<textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" rows="5" placeholder="Comentario..." ng-model="report.comentario.text" aria-invalid="false" required></textarea>
+	         			<textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" rows="5" placeholder="Comentario..." ng-model="report.comentario.value" aria-invalid="false" required></textarea>
 	         			<br>
 	         			<br>
-	     
+
 	         			<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" ng-disabled="form.$invalid" type="button" ng-click="agregarPropuesta()" >{{elements.buttons.agregar.text}}</button>
 
 						<button class="btn btn-slategray br-20 text-md pl-20 pr-20" ng-disabled="form.$invalid" type="button" ng-click="finalizarPropuesta()" >{{elements.buttons.guardar.text}}</button>
@@ -131,7 +132,7 @@
 	         			<br>
 	         			<div ng-if="report.cierreNegocio.value">
 		         			<label class="ng-binding" style="font-weight: 900;">Monto de cierre:</label> 
-		         			<input type="text" class="form-control rounded" ng-model="report.montoCierre.text">
+		         			<input type="number" class="form-control rounded" ng-model="report.montoCierre.value">
 		         		</div>
 	         			<div ng-if="!report.cierreNegocio.value">
 		         			<label class="ng-binding" style="font-weight: 900;">Motivo de pérdida:</label> 
@@ -144,7 +145,7 @@
 		  				</div>
 	         			<br>        			
 	         			<label class="ng-binding" style="font-weight: 900;">Comentario:</label>
-	         			<textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" rows="5" placeholder="Comentario..." ng-model="report.comentario.text" aria-invalid="false" required></textarea>
+	         			<textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" rows="5" placeholder="Comentario..." ng-model="report.comentario.value" aria-invalid="false" required></textarea>
 	         			<br>
 	         			<br>
 	     
@@ -319,7 +320,7 @@
 
 	         			<br>
 	     
-	         			<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" ng-disabled="form.$invalid" type="button" ng-click="updateReport()" >{{elements.buttons.agregar.text}}</button>
+	         			<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" type="button" ng-click="updateReport()" >{{elements.buttons.agregar.text}}</button>
 					</form>
          		</div>
             </div>
