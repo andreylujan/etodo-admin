@@ -1,0 +1,330 @@
+<div class="page">
+	<div class="pageheader">
+		<h2>{{page.title}} <span></span></h2>
+		<div class="page-bar">
+			<ul class="page-breadcrumb">
+				<li>
+		          <a ui-sref="{{main.url}}"> {{main.title}}</a>
+		        </li>
+				<li>
+					<a href="javascript:;">Inspecciones</a>
+				</li>
+				<li>
+					<a ui-sref="app.playStation.reports">{{page.title}}</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="pagecontent">
+		<div class="row">
+			<div class="col-md-12">
+				<section class="tile" fullscreen="isFullscreen06">
+					<div class="tile-body">
+						<div class="row">
+							<div class="col-md-2">
+								<button class="bg-blue-ps pt-7 pb-7 pr-12 pl-12 br-15 b-0 text-white ml-20 mb-10" ng-click="openModalDownloadPdfsByMonth()" uib-tooltip="Descargar Excel"><i class="fa fa-cloud-download"></i></button>
+							</div>
+						</div>
+						<table ng-table="tableParams" show-filter="true" class="table table-custom">
+							<thead>
+								<tr>
+									<th ng-repeat="column in columns2" class="text-center sortable" ng-click="sortBy(column.field_a)"> {{column.title}} </th>
+									<th class="text-center"> PDF </th>
+									<th class="text-center"> Estado </th>
+									<th class="text-center"> Cambio de responsable </th>
+								</tr>
+								<tr>
+									<th ng-repeat="column in columns2" class="text-center sortable" >
+										<input type="text" class="form-control" ng-model="filter[column.filter].filter"/>
+									</th>
+									<th class="text-center" ></th>
+									<th class="text-center" ></th>
+									<th class="text-center" ></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="report in $data | filter: filtro">
+									<td ng-repeat="column in columns2">
+										{{report[column.field_a]}}
+									</td>
+									<td>
+										<input ng-if="report['pdfUploaded']" class="text-center" type="image" src="https://s3-sa-east-1.amazonaws.com/efinding/icons/PDF.png" uib-tooltip="Descargar PDF" tooltip-placement="bottom" style="width: 15px" data-pdf="{{report.pdf}}" ng-click="downloadPdf($event)"/>
+										<input ng-if="!report['pdfUploaded']" class="text-center" type="image" src="http://dhg7r6mxe01qf.cloudfront.net/icons/admin/denied2.png" uib-tooltip="PDF no disponible" tooltip-placement="bottom" style="width: 20px;" data-pdf="{{report.pdf}}" />
+									</td>
+									<td>
+										<a ng-click="UpdateReport(report.id)" ng-if="report.state == 7">Ingreso de actividades</a>
+
+										<a ng-click="ChangeStateReport(report.id, report.state)" ng-if="report.state == 8">Entrega de propuestas</a>
+
+										<a ng-click="ChangeStateReport(report.id, report.state)" ng-if="report.state == 9">Cierre de negocio</a>
+
+										<label ng-if="report.state == 10 && report.negocio == true">Negocio Ganado</label>
+										<label ng-if="report.state == 10 && report.negocio == false">Negocio Perdido</label>
+									</td>
+									<td>
+										<a ng-click="AssignedUser(report.id)" ng-if="report.state != 10">Usuario responsable</a>
+										<label ng-if="report.state == 10">-</label>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="row">
+							<div class="col-md-6" style="margin: 0 auto;float: none;">
+								<pager prev="decrementPage()" next="incrementPage()" change-page="getReports({success:true,detail:'OK'},pagination.pages.current)" current="pagination.pages.current" total="pagination.pages.total"></pager>
+							</div>
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/ng-template" id="AgregarPropuesta.html">
+		<div class="modal-content">
+			<div class="modal-header ng-scope">
+            	<h3 class="modal-title custom-font" style="text-align: center;">Agregar Propuesta Comercial</h3>
+        	</div>
+         	<div class="modal-body ng-scope">
+         		<div class="alert alert-{{elements.alert.color}}" ng-show="elements.alert.show"> 
+         			<h4 class="text-md"><strong>{{elements.alert.title}}</strong></h4> {{elements.alert.text}} 
+         		</div>
+         		<div style="text-align: center;">
+	         		<form class="form-horizontal form-validation" name="form" novalidate>
+	         			<label class="ng-binding" style="font-weight: 900;">Monto Oferta de presupuesto:</label>
+	         			<input type="number" class="form-control rounded" placeholder="Monto de oferta entregado..." ng-model="report.montoOferta.value" required>
+	         			<br>
+
+	         			<label class="ng-binding" style="font-weight: 900;">Versión presupuesto:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Version de presupuesto..." ng-model="report.version.value" required>
+	         			<br>
+
+	         			<label class="ng-binding" style="font-weight: 900;">Comentario:</label>
+	         			<textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" rows="5" placeholder="Comentario..." ng-model="report.comentario.value" aria-invalid="false" required></textarea>
+	         			<br>
+	         			<br>
+
+	         			<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" ng-disabled="form.$invalid" type="button" ng-click="agregarPropuesta()" >{{elements.buttons.agregar.text}}</button>
+
+						<button class="btn btn-slategray br-20 text-md pl-20 pr-20" ng-disabled="form.$invalid" type="button" ng-click="finalizarPropuesta()" >{{elements.buttons.guardar.text}}</button>
+					</form>
+         		</div>
+            </div>
+        </div>
+	</script>
+
+	<script type="text/ng-template" id="CierreDeNegocio.html">
+		<div class="modal-content">
+			<div class="modal-header ng-scope">
+            	<h3 class="modal-title custom-font" style="text-align: center;">Cierre de Negocio</h3>
+        	</div>
+         	<div class="modal-body ng-scope">
+         		<div class="alert alert-{{elements.alert.color}}" ng-show="elements.alert.show"> 
+         			<h4 class="text-md"><strong>{{elements.alert.title}}</strong></h4> {{elements.alert.text}} 
+         		</div>
+         		<div style="text-align: center;">
+         			<form class="form-horizontal form-validation" name="form" novalidate>
+	         			<label class="ng-binding" style="font-weight: 900;">Negocio ganado:</label>
+	         			<label class="checkbox checkbox-custom"> 
+	         				<input type="checkbox" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-not-empty" ng-model="report.cierreNegocio.value" aria-invalid="false">
+	         				<i></i>
+	         			</label>
+	         			<br>
+	         			<div ng-if="report.cierreNegocio.value">
+		         			<label class="ng-binding" style="font-weight: 900;">Monto de cierre:</label> 
+		         			<input type="number" class="form-control rounded" ng-model="report.montoCierre.value">
+		         		</div>
+	         			<div ng-if="!report.cierreNegocio.value">
+		         			<label class="ng-binding" style="font-weight: 900;">Motivo de pérdida:</label> 
+		         			<ui-select class="bg-white b-solid br-15" ng-model="motivoPerdida.selected" close-on-select="true">
+		  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
+		  						<ui-select-choices repeat="motivo in motivoPerdida.data track by motivo.name | propsFilter: {name: $select.search}" refresh-delay="200">
+		  							<div ng-bind-html="motivo.name"></div>
+		  						</ui-select-choices>
+		  					</ui-select>
+		  				</div>
+	         			<br>        			
+	         			<label class="ng-binding" style="font-weight: 900;">Comentario:</label>
+	         			<textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" rows="5" placeholder="Comentario..." ng-model="report.comentario.value" aria-invalid="false" required></textarea>
+	         			<br>
+	         			<br>
+	     
+	         			<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" ng-disabled="form.$invalid" type="button" ng-click="finalizarCierreNegocio()" >{{elements.buttons.finalizar.text}}</button>
+	         		</form>
+         		</div>
+            </div>
+        </div>
+	</script>
+
+	<script type="text/ng-template" id="modalDownloadPdfsByMonth.html">
+			<div class="modal-header text-center">
+				<h3>Descargar Excel de reportes</h3>
+			</div>
+
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="alert alert-{{modal.alert.color}}" ng-show="modal.alert.show"> <h4 class="text-md"><strong>{{modal.alert.title}}</strong></h4> {{modal.alert.text}} </div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<form class="form-horizontal" role="form">
+							<div class="form-group">
+								<label class="col-sm-5 control-label">Descargar reportes del mes</label>
+								<div class="col-sm-6">
+									<p class="input-group">
+										<input type="text" class="form-control" uib-datepicker-popup="MM/yyyy" ng-model="modal.month.date" is-open="modal.datepicker.opened" datepicker-options="{minMode: 'month', showButtonBar: false}" />
+										<span class="input-group-btn">
+											<button type="button" class="btn btn-default" ng-click="openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+										</span>
+									</p>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="modal-footer">
+				<a class="bg-blue-ps pt-7 pb-7 pr-12 pl-12 br-15 b-0 text-white ml-20 mb-10" id="downloadReportsByMonth" ng-href="" ng-click="downloadReports()" ng-disabled="modal.buttons.download.disabled"><i class="fa fa-cloud-download" uib-tooltip="Descargar PDF's"></i> {{modal.buttons.download.text}}</a>
+				<button class="btn btn-cancelRecit btn-rounded-10 mb-10" type="button" ng-click="cancel()">Cerrar</button>
+			</div>
+
+	</script>
+
+	<script type="text/ng-template" id="modalDownloadPdfsByMonth.html">
+		<div class="modal-header text-center">
+			<h3>Descargar Excel de reportes</h3>
+		</div>
+
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-{{modal.alert.color}}" ng-show="modal.alert.show"> <h4 class="text-md"><strong>{{modal.alert.title}}</strong></h4> {{modal.alert.text}} </div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-5 control-label">Descargar reportes del mes</label>
+							<div class="col-sm-6">
+								<p class="input-group">
+									<input type="text" class="form-control" uib-datepicker-popup="MM/yyyy" ng-model="modal.month.date" is-open="modal.datepicker.opened" datepicker-options="{minMode: 'month', showButtonBar: false}" />
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default" ng-click="openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+									</span>
+								</p>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="modal-footer">
+			<a class="bg-blue-ps pt-7 pb-7 pr-12 pl-12 br-15 b-0 text-white ml-20 mb-10" id="downloadReportsByMonth" ng-href="" ng-click="downloadReports()" target="_blank" ng-disabled="modal.buttons.download.disabled"><i class="fa fa-cloud-download" uib-tooltip="Descargar PDF's"></i></a>
+			<button class="btn btn-cancelRecit btn-rounded-10 mb-10" type="button" ng-click="cancel()">Cerrar</button>
+		</div>
+
+	</script>
+
+	<script type="text/ng-template" id="AssignedUser.html">
+		<div class="modal-content">
+			<div class="modal-header ng-scope">
+            	<h3 class="modal-title custom-font" style="text-align: center;">Cambiar usuario responsable</h3>
+        	</div>
+         	<div class="modal-body ng-scope">
+         		<div class="alert alert-{{elements.alert.color}}" ng-show="elements.alert.show"> 
+         			<h4 class="text-md"><strong>{{elements.alert.title}}</strong></h4> {{elements.alert.text}} 
+         		</div>
+         		<div style="text-align: center;">
+         			<form class="form-horizontal form-validation" name="form" novalidate>
+	         			<div>
+		         			<label class="ng-binding" style="font-weight: 900;">Usuario:</label> 
+		         			<ui-select class="bg-white b-solid br-15" ng-model="usuarios.selected" close-on-select="true">
+		  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
+		  						<ui-select-choices repeat="user in usuarios.data" refresh-delay="200">
+		  							<div ng-bind-html="user.name"></div>
+		  						</ui-select-choices>
+		  					</ui-select>
+		  				</div>
+		  				<br>
+		  				<br>
+	         			<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" ng-disabled="form.$invalid" type="button" ng-click="asignarUsuario()" >{{elements.buttons.cambiar.text}}</button>
+	         		</form>
+         		</div>
+            </div>
+        </div>
+	</script>
+
+	<script type="text/ng-template" id="UpdateReport.html">
+		<div class="modal-content">
+			<div class="modal-header ng-scope">
+            	<h3 class="modal-title custom-font" style="text-align: center;">Actualizar reporte</h3>
+        	</div>
+         	<div class="modal-body ng-scope">
+         		<div class="alert alert-{{elements.alert.color}}" ng-show="elements.alert.show"> 
+         			<h4 class="text-md"><strong>{{elements.alert.title}}</strong></h4> {{elements.alert.text}} 
+         		</div>
+         		<div style="text-align: center;">
+	         		<form class="form-horizontal form-validation" name="form" novalidate>
+	         			<label class="ng-binding" style="font-weight: 900;">Nombre del proyecto:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Escriba nombre" ng-model="report.attributes.dynamic_attributes['64'].value" required>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Tipo de constructora:</label> 
+	         			<ui-select class="bg-white b-solid br-15" ng-model="report.attributes.dynamic_attributes['66'].selected" close-on-select="true">
+	  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
+	  						<ui-select-choices repeat="tipo in tipoConstructora.data | filter: {name: $select.search}" refresh-delay="200">
+	  							<div ng-bind-html="tipo.name"></div>
+	  						</ui-select-choices>
+	  					</ui-select>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Constructora:</label> 
+	         			<ui-select class="bg-white b-solid br-15" ng-model="report.attributes.dynamic_attributes['65'].selected" close-on-select="true">
+	  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
+	  						<ui-select-choices repeat="const in constructora.data | filter: {name: $select.search}" refresh-delay="200">
+	  							<div ng-bind-html="const.name"></div>
+	  						</ui-select-choices>
+	  					</ui-select>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Persona de contacto:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Escriba persona de contacto" ng-model="report.attributes.dynamic_attributes['68'].value" required>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Mail de contacto:</label>
+	         			<input type="email" class="form-control rounded" placeholder="Escriba mail de contacto" ng-model="report.attributes.dynamic_attributes['69'].value" required>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Teléfono de contacto:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Escriba teléfono de contacto" ng-model="report.attributes.dynamic_attributes['70'].value" required>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Razón social del cliente:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Escriba razón social del cliente" ng-model="report.attributes.dynamic_attributes['71'].value" required>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">RUT del cliente:</label>
+	         			<input type="text" class="form-control rounded" placeholder="Escriba RUT del cliente" ng-model="report.attributes.dynamic_attributes['72'].value" ng-blur="formatRut(report.attributes.dynamic_attributes['72'].value)" required>
+	         			<br>
+	         			<label class="ng-binding" style="font-weight: 900;">Planos enviados:</label>
+	         			<label class="checkbox checkbox-custom"> 
+	         				<input type="checkbox" class="ng-untouched ng-valid ng-dirty ng-valid-parse ng-not-empty" ng-model="report.attributes.dynamic_attributes['73'].value" aria-invalid="false" style="">
+	         				<i></i>
+	         			</label>
+	         			<label class="ng-binding" style="font-weight: 900;">Comentario:</label>
+	         			<textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" rows="5" placeholder="Comentario..." ng-model="report.attributes.dynamic_attributes['74'].value" aria-invalid="false" required></textarea>
+	         			<br>
+	         			<br>
+
+	         			<br>
+	     
+	         			<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" type="button" ng-click="updateReport()" >{{elements.buttons.agregar.text}}</button>
+					</form>
+         		</div>
+            </div>
+        </div>
+	</script>
+
+</div>
