@@ -59,8 +59,8 @@
 
 										<a ng-click="ChangeStateReport(report.id, report.state)" ng-if="report.state == 9">Cierre de negocio</a>
 
-										<label ng-if="report.state == 10 && report.negocio == true">Negocio Ganado</label>
-										<label ng-if="report.state == 10 && report.negocio == false">Negocio Perdido</label>
+										<label ng-if="report.state == 10 && (report.negocio == true || report.negocio == 'true')">Negocio Ganado</label>
+										<label ng-if="report.state == 10 && (report.negocio == false || report.negocio == 'false')">Negocio Perdido</label>
 									</td>
 									<td>
 										<a ng-click="AssignedUser(report.id)" ng-if="report.state != 10">Usuario responsable</a>

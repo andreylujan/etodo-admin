@@ -1420,6 +1420,7 @@ angular.module('adminProductsApp')
 			idReport: idReport 
 		};
 
+
 		Reports.update(aux, 
 			function(success) {
 				callback({success: true});
@@ -1429,7 +1430,6 @@ angular.module('adminProductsApp')
 		);
 	}
 
-	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
 	$scope.getOneReport = function (callback) {
 
 		Reports.query(
