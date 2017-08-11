@@ -1,0 +1,129 @@
+<div class="page page-dashboard" data-ng-init="getDashboardInfo({success:true,detail:'OK'})">
+	<div class="row">
+		<div class="col-md-8" ng-controller="IDDDashboardCtrl as vm">
+			
+            <ng-map zoom="{{map.zoom}}" 
+                    center="{{map.center.latitude}}, {{map.center.longitude}}" 
+                    style="height:500px">	
+                
+                <custom-marker ng-repeat="report in vm.resueltos" 
+                                id="{{report.id}}" 
+                                position="{{report.position}}" 
+                                on-click="vm.showDetail(report)">
+	                <div>
+	                    <img src="https://s3-sa-east-1.amazonaws.com/efinding/icons/marker-green.png" />
+	                </div>
+		        </custom-marker>
+                <custom-marker ng-repeat="report in vm.recibidos" 
+                                id="{{report.id}}" 
+                                position="{{report.position}}" 
+                                on-click="vm.showDetail(report)">
+                    <div>
+                        <img src="https://s3-sa-east-1.amazonaws.com/efinding/icons/marker-yellow.png" />
+                    </div>
+                </custom-marker>
+                <info-window id="foo-iw">
+                    <div ng-non-bindable="" style="color: {{vm.report.color}}">
+                      <strong>{{vm.report.type}}</strong>
+                    </div>
+                  </info-window>
+	       </ng-map>
+		</div>
+
+        <div class="col-md-4">
+            <div class="col-md-12">
+                <div class="input-group">
+                    <span class="input-group-addon" style="border-radius: 15px 0px 0px 15px; background-color: #025D91; border-color: #025D91;"
+                    >
+                        <i class="fa fa-calendar " style="color:white;" aria-hidden="true"></i>
+                    </span>
+                    <input style="border-radius: 0px 15px 15px 0px; background-color: #025D91; border-color: #025D91; color: white; text-transform:uppercase" type="text" class="form-control rounded" uib-datepicker-popup="{{$filter('capitalize')}}dd/MMMM" ng-model="page.filters.date.value" is-open="page.filters.date.opened" datepicker-options="{minMode: 'month', showButtonBar: false}" close-text="Cerrar" clear-text="Limpiar" current-text="Hoy" readonly ng-click="openDatePicker($event)" />
+                </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <section class="tile" style="background-color: #FFC803">
+                        <div class="tile-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="tile-body text-center" style="padding: 5px;">
+                                        <h1 class="m-0" style="font-size: 350%; color:white"><b>80</b></h1>
+                                        <span class="text" style="font-size: 120%; color:white"><b>Recibidos</b></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-md-6">
+                    <section class="tile" style="background-color: #00CE5F">
+                        <div class="tile-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="tile-body text-center" style="padding: 5px;">
+                                        <h1 class="m-0" style="font-size: 350%; color:white"><b>50</b></h1>
+                                        <span class="text" style="font-size: 120%; color:white"><b>Resueltas</b></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <section class="tile">
+                    <div class="tile-header dvd dvd-btm">
+                        <h1 class="custom-font"><strong>Pendientes por categoría</strong></h1>
+                    </div>
+                    <div class="tile-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <section class="tile tile-simple">
+                                  <div class="tile-body p-0">
+                                    <div class="list-group no-radius no-border">
+                                      <a class="list-group-item" ng-repeat="pen in dashboard.pendientes" ng-if="pen.active">
+                                        <div style="display:inline-block;width:75%; text-align: left;">
+                                            <b>{{pen.name}}</b>
+                                        </div>
+                                        <div style="display:inline-block;width:19%; text-align: left;">
+                                            <b>{{pen.num_reports}}</b>
+                                        </div>
+                                      </a>
+                                      <a class="list-group-item" ng-if="page.buttonList.active" ng-click="showAllItems()">
+                                        <div style="text-align: center;">
+                                            <b>{{page.buttonList.text}}</b>
+                                        </div>
+                                      </a>
+                                    </div>
+                                  </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-12">
+                <section class="tile">
+                    <div class="tile-header dvd dvd-btm">
+                        <h1 class="custom-font"><strong>Recibidos por departamento</strong></h1>
+                    </div>
+
+                    <div class="tile-body">
+                        <div class="row">
+                            <div class="col-md-12 solid">
+                                <section class="tile" >
+                                    <div class="tile-widget">
+                                        <highchart config="cantidadHallazgosDonut"></highchart>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+	</div>
+</div>

@@ -1,7 +1,7 @@
 <div id="sidebar-wrap" ng-controller="NavCtrl">
 <uib-accordion close-others="oneAtTime" ng-if="page.menuLoaded" >
     <uib-accordion-group is-open="true" nav-collapse>
-      <ul id="navigation"  ripple>
+      <!--ul id="navigation"  ripple>
 
         <li ui-sref-active="active" ng-repeat="section in page.menu" ng-class="{'open':$state.includes('{{section.path}}')}" >
           <a ui-sref="{{section.path}}"><fa name="{{section.icon}}"></fa> <span>{{section.name}}</span></a>
@@ -20,7 +20,7 @@
             </div>
           </ul>
         </li>
-      </ul>
+      </ul-->
     </uib-accordion-group>
   </uib-accordion> 
 </div>

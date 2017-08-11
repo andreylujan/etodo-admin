@@ -135,6 +135,12 @@ angular
 			templateUrl: 'views/tmpl/app.html'
 		})
 
+		.state('iddPublic', {
+			url: '/publicidd',
+			controller: 'PublicIDDDashboardCtrl',
+			templateUrl: 'views/tmpl/dashboard/publicidd.html'
+		})
+
 		//dashboard
 		.state('echeckit.dashboard', {
 				url: '/dashboard',
@@ -144,6 +150,11 @@ angular
 				url: '/generic',
 				templateUrl: 'views/tmpl/dashboard/generic.html',
 				controller: 'GenericDashboardCtrl'
+			})
+			.state('echeckit.dashboard.idd', {
+				url: '/idd',
+				templateUrl: 'views/tmpl/dashboard/idd.html',
+				controller: 'IDDDashboardCtrl'
 			})
 
 		// Channels
