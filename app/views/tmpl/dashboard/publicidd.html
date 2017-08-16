@@ -19,9 +19,6 @@
 	  color: white;
 	}
 
-	#rounded {
-	    border-radius: 25px;
-	}
 	.carousel-indicators li { visibility: hidden; }
 	.carousel-control { visibility: hidden; }
 
@@ -40,12 +37,8 @@
 			<br>
 			<div class="row">
 				<div class="col-md-12">
-					<div class="input-group">
-					  	<span class="input-group-addon" style="border-radius: 15px 0px 0px 15px; background-color: #025D91; border-color: #025D91;"
-					  	>
-					  		<i class="fa fa-calendar " style="color:white;" aria-hidden="true"></i>
-					  	</span>
-					  	<input style="border-radius: 0px 15px 15px 0px; background-color: #025D91; border-color: #025D91; color: white; text-transform:uppercase" type="text" class="form-control rounded" uib-datepicker-popup="{{$filter('capitalize')}}dd/MMMM" ng-model="page.filters.date.value" is-open="page.filters.date.opened" datepicker-options="{minMode: 'month', showButtonBar: false}" close-text="Cerrar" clear-text="Limpiar" current-text="Hoy" readonly/>
+					<div class="input-group text-center" style="width: 100%;">
+					  	<input style= "background-color: #025D91; border-color: #025D91; color: white; border-radius: 15px;" type="text" class="form-control text-center" value="Reclamos del mes"/>
 					</div>
 				</div>
 			</div>
@@ -74,7 +67,7 @@
 		              			<div class="col-md-12">
 		              				<div class="tile-body text-center" style="padding: 5px;">
 						           		<h1 class="m-0" style="font-size: 350%; color:white"><b>50</b></h1>
-							        	<span class="text" style="font-size: 120%; color:white"><b>Resueltas</b></span>
+							        	<span class="text" style="font-size: 120%; color:white"><b>Resueltos</b></span>
 						          	</div>
 		              			</div>
 		              		</div>

@@ -127,7 +127,7 @@ angular.module('adminProductsApp')
 		// 	type = 'column';
 		// }
 		
-		var colores = ['#C3C5C9', '#6F6C73', '#35353F', '#23222B'];
+		var colores = ['#FFC803', '#F25F4D', '#405B72'];
 		/*if (!height) {
 			height = 250;
 		}*/

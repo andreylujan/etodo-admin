@@ -47,50 +47,37 @@ angular.module('adminProductsApp')
  		},
  		{
  			name: 'Alumbrado',
- 			num_reports: 20,
+ 			num_reports: 10,
  			active: true
  		},
  		{
  			name: 'Ruidos molestos',
- 			num_reports: 20,
+ 			num_reports: 15,
  			active: true
  		},
  		{
  			name: 'Aseo y hornato',
- 			num_reports: 20,
+ 			num_reports: 1,
  			active: true
  		},
  		{
  			name: 'Levanta arboles',
- 			num_reports: 20,
+ 			num_reports: 8,
  			active: false
  		},
  		{
  			name: 'Luminaria publica',
- 			num_reports: 20,
+ 			num_reports: 22,
  			active: false
  		},
  		{
  			name: 'PRUEBA',
- 			num_reports: 20,
- 			active: false
- 		},
- 		{
- 			name: 'PRUEBA2',
- 			num_reports: 20,
- 			active: false
- 		},
- 		{
- 			name: 'PRUEBA3',
- 			num_reports: 20,
- 			active: false
- 		},
- 		{
- 			name: 'PRUEBA4',
- 			num_reports: 20,
+ 			num_reports: 13,
  			active: false
  		}
  	];
+
+ 	$log.error();
 
  	$scope.cantidadHallazgosDonut = Utils.setChartConfig(
 		'pie', 
@@ -126,19 +113,10 @@ angular.module('adminProductsApp')
 		}, 
 		[
 			{
-			    name: 'Riesgo',
+			    name: 'Cantidad',
 			    colorByPoint: true,
 			    innerSize: '50%',
-			    data: [{
-			        name: 'Bajo',
-		            y: 10
-		        }, {
-		            name: 'Medio',
-		            y: 20
-		        }, {
-		            name: 'Alto',
-		            y: 30
-			    }]
+			    data: _.map($scope.dashboard.pendientes, function(num, key){ return {name: num.name, y:num.num_reports}; })
 		    }
 		]
 	);

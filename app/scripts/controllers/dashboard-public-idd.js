@@ -67,7 +67,7 @@ angular.module('adminProductsApp')
           	}
           
           	var i = 0;
-          	var stopTime = $interval(updateTime, 1000);
+          	var stopTime = $interval(updateTime, 15000);
 
           	element.on('$destroy', function() {
             	$interval.cancel(stopTime);
