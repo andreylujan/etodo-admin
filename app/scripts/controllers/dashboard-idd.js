@@ -168,14 +168,63 @@ angular.module('adminProductsApp')
 		{
 			id:'1', 
 			name: 'REPORTE 1', 
-			position:[-33.3769732, -56.5264399],
+			position:[-33.3769800, -56.5264399],
 			type: 'resuelto',
 			color: 'green'
 		},
 		{
 			id:'2', 
 			name: 'REPORTE 2', 
+			position:[-33.379990, -56.5279775],
+			type: 'recibido',
+			color: 'orange'
+		},
+		{
+			id:'1', 
+			name: 'REPORTE 3', 
+			position:[-33.389990, -56.5364409],
+			type: 'resuelto',
+			color: 'green'
+		},
+		{
+			id:'2', 
+			name: 'REPORTE 4', 
+			position:[-33.3769732, -56.5224809],
+			type: 'recibido',
+			color: 'orange'
+		},
+		{
+			id:'1', 
+			name: 'REPORTE 5', 
+			position:[-33.3763285, -56.5264399],
+			type: 'resuelto',
+			color: 'green'
+		},
+		{
+			id:'1', 
+			name: 'REPORTE 6', 
 			position:[-33.3762923, -56.5314288],
+			type: 'resuelto',
+			color: 'green'
+		},
+		{
+			id:'1', 
+			name: 'REPORTE 7', 
+			position:[-33.3792488, -56.5224809],
+			type: 'recibido',
+			color: 'orange'
+		},
+		{
+			id:'1', 
+			name: 'REPORTE 8', 
+			position:[-33.3763281, -56.5278775],
+			type: 'resuelto',
+			color: 'green'
+		},
+		{
+			id:'1', 
+			name: 'REPORTE 9', 
+			position:[-33.369990, -56.5224809],
 			type: 'recibido',
 			color: 'orange'
 		}

@@ -9,7 +9,7 @@
  */
 angular.module('adminProductsApp')
 
-.controller('ReportsListEcheckitCtrl', function($scope, $log, $filter, $window, $timeout, $uibModal, NgTableParams, Reports, Utils) {
+.controller('ReportsListEcheckitCtrl', function($scope, $log, $filter, $window, $timeout, $uibModal, $sce, NgTableParams, Reports, Utils) {
 
 	$scope.page = {
 		title: 'Lista de Reportes',
@@ -172,7 +172,6 @@ angular.module('adminProductsApp')
 						test[test.length - 1]['negocio'] 		= success.data[i].attributes.dynamic_attributes['60'].value;
 					}
 
-					//if (success.data[i].dynamic_attributes) {}
 					//no tiene relacion o es un objeto de consulta directa al dato
 					if (success.data[i].attributes[$scope.columns2[j].field]) {
 						test[test.length - 1][$scope.columns2[j].field_a] = success.data[i].attributes[$scope.columns2[j].field];
@@ -191,26 +190,60 @@ angular.module('adminProductsApp')
 								if (relationships.length == 1) 
 								{
 									for (k = 0; k < success.included.length; k++) {
-										if (success.data[i].relationships[$scope.columns2[j].relationshipName].data != null) 
+										//TRUE = Su relacion tiene un indice de objeto, el cual indica el objeto dentro del arreglo de include, cual es el indice al cual apuntar
+										if (_.contains($scope.columns2[j].relationshipName, '[') && _.contains($scope.columns2[j].relationshipName, ']')) 
 										{
-											if (success.data[i].relationships[$scope.columns2[j].relationshipName].data.id === success.included[k].id &&
-											success.data[i].relationships[$scope.columns2[j].relationshipName].data.type === success.included[k].type) 
+											var indice = $scope.columns2[j].relationshipName.split('[').pop().split(']').shift();
+											var relacion = $scope.columns2[j].relationshipName.substring(0,$scope.columns2[j].relationshipName.lastIndexOf("["));
+
+											if (success.data[i].relationships[relacion].data[indice] != null) 
 											{
-												if (success.included[k].attributes[$scope.columns2[j].field] != null) 
+
+												if (success.data[i].relationships[relacion].data[indice].id === success.included[k].id &&
+												success.data[i].relationships[relacion].data[indice].type === success.included[k].type) 
 												{
-													test[test.length - 1][$scope.columns2[j].field_a] = success.included[k].attributes[$scope.columns2[j].field];
+													if (success.included[k].attributes[$scope.columns2[j].field] != null) 
+													{
+														test[test.length - 1][$scope.columns2[j].field_a] = success.included[k].attributes[$scope.columns2[j].field];
+													}
+													else
+													{
+														test[test.length - 1][$scope.columns2[j].field_a] = '-';
+													}
+													break;
 												}
-												else
-												{
-													test[test.length - 1][$scope.columns2[j].field_a] = '-';
-												}
+											}
+											else
+											{
+												test[test.length - 1][$scope.columns2[j].field_a] = '-';
 												break;
 											}
-										}
-										else
+										} 
+										else 
 										{
-											test[test.length - 1][$scope.columns2[j].field_a] = '-';
-											break;
+											if (success.data[i].relationships[$scope.columns2[j].relationshipName].data != null) 
+											{
+
+												if (success.data[i].relationships[$scope.columns2[j].relationshipName].data.id === success.included[k].id &&
+												success.data[i].relationships[$scope.columns2[j].relationshipName].data.type === success.included[k].type) 
+												{
+													if (success.included[k].attributes[$scope.columns2[j].field] != null) 
+													{
+														//$log.error(success.included[k].attributes[$scope.columns2[j].field]);
+														test[test.length - 1][$scope.columns2[j].field_a] = success.included[k].attributes[$scope.columns2[j].field];
+													}
+													else
+													{
+														test[test.length - 1][$scope.columns2[j].field_a] = '-';
+													}
+													break;
+												}
+											}
+											else
+											{
+												test[test.length - 1][$scope.columns2[j].field_a] = '-';
+												break;
+											}
 										}
 									}
 								}
@@ -420,6 +453,10 @@ angular.module('adminProductsApp')
 				success: true
 			}, $scope.pagination.pages.current, $scope.filter);
 		}
+	};
+
+	$scope.trustAsHtml = function(string) {
+	    return $sce.trustAsHtml(string);
 	};
 
 	/*$scope.getReports({

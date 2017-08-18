@@ -35,43 +35,116 @@ angular.module('adminProductsApp')
   		$scope.noWrapSlides = false;
   		$scope.active = 0;
   		$scope.images = [{
-		    	image: "https://sonar.es/system/attached_images/12194/medium/nina-kraviz-sonar-bcn-2017.jpg?1497721012",
-		    	currentPoint: "0",
-		    	endPoint: "1"
+		    	image: "http://fotos02.farodevigo.es/fotos/noticias/318x200/2011-09-25_IMG_2011-09-25_23:06:13_morra2.jpg",
+		    	type: "before",
+		    	usuario: "Andres Lagos",
+		    	active: true
 		  	}, {
-		    	image: "https://laxelectronica.com/wp-content/uploads/2016/11/59a9f4f9fd5608775345da654978d894.jpg",
-		    	currentPoint: "0",
-		    	endPoint: "4"
+		    	image: "http://www.que.es/archivos/201509/contenedorbasura-672xXx80.jpg",
+		    	type: "after",
+		    	usuario: "Andres Lagos",
+		    	active: true
 		  	}, {
-		    	image: "http://warp.la/wp-content/uploads/2017/06/totally_dublin_nina_kraviz_1-1.jpg",
-		    	currentPoint: "0",
-		    	endPoint: "4"
+		    	image: "http://www.multimedios.com/files/article_main/uploads/2017/02/20/58ab386a394a6.jpeg",
+		    	type: "before",
+		    	usuario: "Juan Perez",
+		    	active: false
 		  	}, {
-		    	image: "https://media.npr.org/assets/img/2016/11/28/ninakravizcamilleblake_wide-7875d27fbf31a6310dcf6a3304a7789d07b322b6.jpeg?s=1400",
-		    	currentPoint: "0",
-		    	endPoint: "1"
+		    	image: "https://pbs.twimg.com/media/Cwc25NoWgAESieW.jpg",
+		    	type: "after",
+		    	usuario: "Juan Perez",
+		    	active: false
+		  	}, {
+		    	image: "https://s3-sa-east-1.amazonaws.com/assets.abc.com.py/2015/06/01/la-calle-del-maestro-esta-horrible-pozos-con-agua-y-serie-de-desniveles-ponen-en-jaque-a-muchos-conductores-_763_573_1237436.jpg",
+		    	type: "before",
+		    	usuario: "Mario de la Torre",
+		    	active: false
+		  	}, {
+		    	image: "http://elgarinense.com.ar/wp-content/uploads/2016/11/calle.jpg",
+		    	type: "after",
+		    	usuario: "Mario de la Torre",
+		    	active: false
 		  	}
 		];
+
+
+		$scope.before = _.where($scope.images, {type: "before"});
+		$scope.after = _.where($scope.images, {type: "after"});
+		
+		$scope.nombre = _.where($scope.before, {active: true})[0];
+		
+		var myInterval = $interval(function()
+		{
+			if (_.last($scope.before) == $scope.nombre) 
+			{
+				_.last($scope.before).active = false;
+				_.first($scope.before).active = true;
+
+			} 
+			else 
+			{
+				for (var i = 0; i < $scope.before.length; i++) 
+				{
+					if ($scope.before[i].active == true) 
+					{
+						$scope.before[i].active = false;
+						$scope.before[i+1].active = true;
+						break;
+					}
+				}
+			}
+
+			$scope.nombre = _.where($scope.before, {active: true})[0];
+
+		}
+		, 5000)
 	})
 	
-	.directive('myImages', ['$interval', 'dateFilter',
-      function($interval, dateFilter) {
+	.directive('before', ['$window', '$interval', 'dateFilter',
+      function($window, $interval, dateFilter) {
         return function(scope, element, attrs) {
           	function updateTime() {
-            	attrs.$set('src',scope.images[i].image);
+            	attrs.$set('src',scope.before[i].image);
             	i ++
-            	if(i == scope.images.length)
+            	if(i == scope.before.length)
             	{
               		i = 0
             	}
           	}
+
+          	angular.element($window).bind('load', function() {
+		         updateTime();
+		    });
           
           	var i = 0;
-          	var stopTime = $interval(updateTime, 15000);
+          	var stopTime = $interval(updateTime, 5000);
 
           	element.on('$destroy', function() {
             	$interval.cancel(stopTime);
          	});
         }
-    }
-	]);
+    }])
+    .directive('after', ['$window', '$interval', 'dateFilter',
+      function($window, $interval, dateFilter) {
+        return function(scope, element, attrs) {
+          	function updateTime() {
+            	attrs.$set('src',scope.after[i].image);
+            	i ++
+            	if(i == scope.after.length)
+            	{
+              		i = 0
+            	}
+          	}
+
+          	angular.element($window).bind('load', function() {
+		         updateTime();
+		    });
+          
+          	var i = 0;
+          	var stopTime = $interval(updateTime, 5000);
+
+          	element.on('$destroy', function() {
+            	$interval.cancel(stopTime);
+         	});
+        }
+    }]);

@@ -83,14 +83,20 @@
 			            	<h1 class="custom-font"><img src="https://s3-sa-east-1.amazonaws.com/efinding/icons/tuvoz.png"><strong style="color: #025D91;">TU VOZ IMPORTA</strong></h1>
 			          	</div>
 			          	<div class="tile-body">
+			          		<div class="text-center">
+			          			<span class="text-center" style="font-size: 140%; color: #025D91">
+			          			<b>{{nombre.usuario}}</b>
+			          		</span>
+			          		</div>
+			          		<hr>
 						    <div>
 						    	<span class="text" style="font-size: 120%; color: #025D91"><b>Antes</b></span>
-       							<img my-images images="images" style=" width: 100%;"/>
+       							<img before images="before" ng-init="load()" style=" width: 100%;"/>
   							</div>
   							<br>
   							<div>
   								<span class="text" style="font-size: 120%; color: #025D91"><b>Despues</b></span>
-       							<img my-images images="images" style=" width: 100%;"/>
+       							<img after images="after" ng-init="updateTime()" style=" width: 100%;"/>
   							</div>
 			           	</div>
 			        </section>
@@ -145,17 +151,40 @@
 
 	    var features = [
 		      {
-		        position: new google.maps.LatLng(-33.3769732, -56.5264399),
+		        position: new google.maps.LatLng(-33.3769800, -56.5264399),
 		        type: 'resuelto'
-		      }, {
+		      },
+		      {
+		        position: new google.maps.LatLng(-33.379990, -56.5279775),
+		        type: 'resuelto'
+		      },
+		      {
+		        position: new google.maps.LatLng(-33.389990, -56.5364409),
+		        type: 'resuelto'
+		      },
+		      {
+		        position: new google.maps.LatLng(-33.3769732, -56.5224809),
+		        type: 'resuelto'
+		      },
+		      {
+		        position: new google.maps.LatLng(-33.3763285, -56.5264399),
+		        type: 'resuelto'
+		      }, 
+		      {
 		        position: new google.maps.LatLng(-33.3762923, -56.5314288),
 		        type: 'recibido'
-		      }, {
+		      }, 
+		      {
 		        position: new google.maps.LatLng(-33.3792488, -56.5224809),
-		        type: 'resuelto'
-		      }, {
+		        type: 'recibido'
+		      }, 
+		      {
 		        position: new google.maps.LatLng(-33.3763281, -56.5278775),
 		        type: 'recibido'
+		      },
+		      {
+		        position: new google.maps.LatLng(-33.369990, -56.5224809),
+		        type: 'resuelto'
 		      }
 		    ];
 
