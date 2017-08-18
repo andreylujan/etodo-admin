@@ -9,10 +9,10 @@
  */
 angular.module('adminProductsApp')
 
-.controller('ReportsListEcheckitCtrl', function($scope, $log, $filter, $window, $timeout, $uibModal, NgTableParams, Reports, Activities, Utils) {
+.controller('ReportsListEcheckitCtrl', function($scope, $log, $filter, $window, $timeout, $uibModal, NgTableParams, Reports, Utils) {
 
 	$scope.page = {
-		title: 'Lista de reportes',
+		title: 'Lista de Reportes',
 		prevBtn: {
 			disabled: true
 		},
@@ -98,7 +98,7 @@ angular.module('adminProductsApp')
 			$scope.filter[auxiliar].columnName = $scope.columns[i].title;
 			$scope.filter[auxiliar].relationshipName = $scope.columns[i].relationshipName;
 		}
-		$scope.filter.include = _.findWhere(_.findWhere(included, { name: 'Inspecciones'}).items, { path: 'efinding.inspecciones.list'}).included;
+		$scope.filter.include = _.findWhere(_.findWhere(included, { name: 'Reclamos'}).items, { path: 'echeckit.reports.list'}).included;
 		$scope.filter['page[number]'] = $scope.pagination.pages.current;
 		$scope.filter['page[size]'] = $scope.pagination.pages.size;
 	}
@@ -163,8 +163,16 @@ angular.module('adminProductsApp')
 				for (var j = 0; j < $scope.columns2.length; j++) {
 					test[test.length - 1]['pdf'] 			= success.data[i].attributes.pdf;
 					test[test.length - 1]['pdfUploaded'] 	= success.data[i].attributes.pdf_uploaded;
-					test[test.length - 1]['state'] = success.data[i].attributes.state;
-					test[test.length - 1]['id'] = success.data[i].id;
+					test[test.length - 1]['state'] 			= success.data[i].attributes.state_id;
+					test[test.length - 1]['id'] 			= success.data[i].id;
+					test[test.length - 1]['negocio'] 		= '';
+
+					if (success.data[i].attributes.dynamic_attributes['60'] != undefined) 
+					{
+						test[test.length - 1]['negocio'] 		= success.data[i].attributes.dynamic_attributes['60'].value;
+					}
+
+					//if (success.data[i].dynamic_attributes) {}
 					//no tiene relacion o es un objeto de consulta directa al dato
 					if (success.data[i].attributes[$scope.columns2[j].field]) {
 						test[test.length - 1][$scope.columns2[j].field_a] = success.data[i].attributes[$scope.columns2[j].field];
@@ -188,7 +196,6 @@ angular.module('adminProductsApp')
 											if (success.data[i].relationships[$scope.columns2[j].relationshipName].data.id === success.included[k].id &&
 											success.data[i].relationships[$scope.columns2[j].relationshipName].data.type === success.included[k].type) 
 											{
-				
 												if (success.included[k].attributes[$scope.columns2[j].field] != null) 
 												{
 													test[test.length - 1][$scope.columns2[j].field_a] = success.included[k].attributes[$scope.columns2[j].field];
@@ -297,13 +304,13 @@ angular.module('adminProductsApp')
 							//valida que existe el objeto dentro de los dynamic_attributes
 							if (flag.hasOwnProperty(aux[1])) 
 							{
-								//Valida que exista el objeto text
-								if (flag[aux[1]].hasOwnProperty('text')) 
+								//Valida que exista el objeto value
+								if (flag[aux[1]].hasOwnProperty('value')) 
 								{
 									//$log.error('2')
 									//$log.error(flag[aux[1]]);
-									test[test.length - 1][$scope.columns2[j].field_a] = flag[aux[1]].text;
-									test[test.length - 1][$scope.columns2[j].name] = flag[aux[1]].text;
+									test[test.length - 1][$scope.columns2[j].field_a] = flag[aux[1]].value;
+									test[test.length - 1][$scope.columns2[j].name] = flag[aux[1]].value;
 								}
 								else
 								{
@@ -326,7 +333,6 @@ angular.module('adminProductsApp')
 				}
 			}
 			reportes = test;
-
 
 			$scope.tableParams = new NgTableParams({
 				page: 1, // show first page

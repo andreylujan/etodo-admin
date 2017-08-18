@@ -157,7 +157,7 @@ angular.module('adminProductsApp')
 
 			//$log.error(success.data);
 
-			for (i = 0; i < success.data.length; i++) {
+			for (i = 0; i < 3; i++) {
 				test.push({});
 
 				for (var j = 0; j < $scope.columns2.length; j++) {

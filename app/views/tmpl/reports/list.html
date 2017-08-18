@@ -61,7 +61,7 @@
 							<tbody>
 								<tr ng-repeat="report in $data | filter: filtro">
 									<td ng-repeat="column in columns2">
-										{{inspection[column.field_a]}}
+										{{report[column.field_a]}}
 									</td>
 									<td>
 										<input ng-if="report['pdfUploaded']" class="text-center" type="image" src="https://s3-sa-east-1.amazonaws.com/efinding/icons/PDF.png" uib-tooltip="Descargar PDF" tooltip-placement="bottom" style="width: 15px" data-pdf="{{report.pdf}}" ng-click="downloadPdf($event)"/>

@@ -120,7 +120,6 @@ angular.module('adminProductsApp')
 
 			Utils.setInStorage('report_columns', columns.reportColumns);
 
-
 		}, function(error) {
 			defered.reject({
 				success: false,
