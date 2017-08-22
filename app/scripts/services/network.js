@@ -295,6 +295,27 @@ angular.module('adminProductsApp')
 
 })
 
+/// DASHBOARD IDD
+.factory('DashboardIDD', function($resource) {
+
+	return $resource(API_URL + '/dashboard/idd/:type', {
+		type: '@type'
+	}, {
+		query: {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/vnd.api+json',
+				Accept: 'application/vnd.api+json'
+			},
+			params: {
+				include: '@include',
+				fieldsReports: '@fieldsReports',
+			}
+		}
+	});
+
+})
+
 /// COLLECTIONS
 .factory('Collection', function($resource) {
 

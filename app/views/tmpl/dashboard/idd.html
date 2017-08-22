@@ -1,4 +1,4 @@
-<div class="page page-dashboard" data-ng-init="getDashboardInfo({success:true,detail:'OK'})">
+<div class="page page-dashboard">
 	<div class="row">
 		<div class="col-md-8" ng-controller="IDDDashboardCtrl as vm">
 			
@@ -6,7 +6,7 @@
                     center="{{map.center.latitude}}, {{map.center.longitude}}" 
                     style="height:642px">	
                 
-                <custom-marker ng-repeat="report in vm.resueltos" 
+                <custom-marker ng-repeat="report in Mresueltos" 
                                 id="{{report.id}}" 
                                 position="{{report.position}}" 
                                 on-click="vm.showDetail(report)">
@@ -14,7 +14,7 @@
 	                    <img src="https://s3-sa-east-1.amazonaws.com/efinding/icons/marker-green.png" />
 	                </div>
 		        </custom-marker>
-                <custom-marker ng-repeat="report in vm.recibidos" 
+                <custom-marker ng-repeat="report in Mrecibidos" 
                                 id="{{report.id}}" 
                                 position="{{report.position}}" 
                                 on-click="vm.showDetail(report)">
@@ -23,8 +23,8 @@
                     </div>
                 </custom-marker>
                 <info-window id="foo-iw">
-                    <div ng-non-bindable="" style="color: {{vm.report.color}}">
-                      <strong>{{vm.report.type}}</strong>
+                    <div ng-non-bindable="" style="color: {{report.color}}">
+                      <strong>{{report.type}}</strong>
                     </div>
                   </info-window>
 	       </ng-map>
@@ -50,7 +50,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="tile-body text-center" style="padding: 5px;">
-                                        <h1 class="m-0" style="font-size: 350%; color:white"><b>80</b></h1>
+                                        <h1 class="m-0" style="font-size: 350%; color:white"><b>{{recibidos}}</b></h1>
                                         <span class="text" style="font-size: 120%; color:white"><b>Recibidos</b></span>
                                     </div>
                                 </div>
@@ -64,7 +64,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="tile-body text-center" style="padding: 5px;">
-                                        <h1 class="m-0" style="font-size: 350%; color:white"><b>50</b></h1>
+                                        <h1 class="m-0" style="font-size: 350%; color:white"><b>{{resueltos}}</b></h1>
                                         <span class="text" style="font-size: 120%; color:white"><b>Resueltos</b></span>
                                     </div>
                                 </div>

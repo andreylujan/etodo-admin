@@ -8,8 +8,10 @@
  * Controller of the adminProductsApp
  */
 angular.module('adminProductsApp')
-	.controller('PublicIDDDashboardCtrl', function($scope, $log, $interval, Utils, NgTableParams, Dashboard, NgMap) {
+	.controller('PublicIDDDashboardCtrl', function($scope, $auth, $log, $interval, Utils, NgTableParams, DashboardIDD, NgMap) {
 		
+		$auth.setToken('5e14db9e991dd77358fa8d14736273aff5395b8634da12e1c340b7919d6c56d7');
+
 		$scope.page = {
 	 		filters: {
 	 			date: {
@@ -18,6 +20,56 @@ angular.module('adminProductsApp')
 	 			}
 	 		}
 	 	};
+
+	 	$scope.map = 
+	 	{ 
+			center: 
+			{ 
+				latitude: -33.4428576054363,//-33.3769732, 
+				longitude: -70.6258822605672//-56.5264399 
+			}, 
+			zoom: 15 
+	 	};
+
+	 	$scope.myInterval = 2000;
+  		$scope.noWrapSlides = false;
+  		$scope.active = 0;
+
+	 	$scope.getDashboardInfo = function() {
+	 		DashboardIDD.query({
+	 			'type': 'public'
+	 		}, function(success) {
+			    if (success.data) {
+			    	$scope.images = success.data.attributes.images;
+
+			    	$scope.before = _.where($scope.images, {type: "before"});
+					$scope.after = _.where($scope.images, {type: "after"});
+
+					$scope.before[0].active = true;
+
+					$scope.nombre = _.where($scope.before, {active: true})[0];
+
+					$scope.recibidos = success.data.attributes.num_received;
+		    		$scope.resueltos = success.data.attributes.num_resolved;
+
+		    		$scope.report_locations = success.data.attributes.report_locations;
+
+		    		// INICIO MAPA
+					$scope.Mrecibidos = _.where(success.data.attributes.report_locations, {type: "recibido"})
+					$scope.Mresueltos = _.where(success.data.attributes.report_locations, {type: "resuelto"})
+			    	// FIN MAPA
+			   	}
+			}, function(error) {
+				$log.error(error);
+				if (error.status === 401) {
+					Utils.refreshToken($scope.getDashboardInfo);
+
+
+				}
+			});
+		};
+
+		$scope.getDashboardInfo();
 
 	 	$scope.openDatePicker = function($event) {
 			$event.preventDefault();
@@ -29,50 +81,6 @@ angular.module('adminProductsApp')
 			$uibModalInstance.dismiss('cancel');
 		};
 
-
-		//SLIDER
-		$scope.myInterval = 2000;
-  		$scope.noWrapSlides = false;
-  		$scope.active = 0;
-  		$scope.images = [{
-		    	image: "http://fotos02.farodevigo.es/fotos/noticias/318x200/2011-09-25_IMG_2011-09-25_23:06:13_morra2.jpg",
-		    	type: "before",
-		    	usuario: "Andres Lagos",
-		    	active: true
-		  	}, {
-		    	image: "http://www.que.es/archivos/201509/contenedorbasura-672xXx80.jpg",
-		    	type: "after",
-		    	usuario: "Andres Lagos",
-		    	active: true
-		  	}, {
-		    	image: "http://www.multimedios.com/files/article_main/uploads/2017/02/20/58ab386a394a6.jpeg",
-		    	type: "before",
-		    	usuario: "Juan Perez",
-		    	active: false
-		  	}, {
-		    	image: "https://pbs.twimg.com/media/Cwc25NoWgAESieW.jpg",
-		    	type: "after",
-		    	usuario: "Juan Perez",
-		    	active: false
-		  	}, {
-		    	image: "https://s3-sa-east-1.amazonaws.com/assets.abc.com.py/2015/06/01/la-calle-del-maestro-esta-horrible-pozos-con-agua-y-serie-de-desniveles-ponen-en-jaque-a-muchos-conductores-_763_573_1237436.jpg",
-		    	type: "before",
-		    	usuario: "Mario de la Torre",
-		    	active: false
-		  	}, {
-		    	image: "http://elgarinense.com.ar/wp-content/uploads/2016/11/calle.jpg",
-		    	type: "after",
-		    	usuario: "Mario de la Torre",
-		    	active: false
-		  	}
-		];
-
-
-		$scope.before = _.where($scope.images, {type: "before"});
-		$scope.after = _.where($scope.images, {type: "after"});
-		
-		$scope.nombre = _.where($scope.before, {active: true})[0];
-		
 		var myInterval = $interval(function()
 		{
 			if (_.last($scope.before) == $scope.nombre) 
@@ -98,7 +106,8 @@ angular.module('adminProductsApp')
 
 		}
 		, 5000)
-	})
+
+})
 	
 	.directive('before', ['$window', '$interval', 'dateFilter',
       function($window, $interval, dateFilter) {
