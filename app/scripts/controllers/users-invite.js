@@ -9,7 +9,7 @@
  */
 angular.module('adminProductsApp')
 
-.controller('UsersInviteCtrl', function($scope, $log, $filter, $window, $uibModal, Users, Invitations, Csv, Utils) {
+.controller('UsersInviteCtrl', function($scope, $log, $filter, $window, $uibModal, Users, Invitations, Csv, Utils, Roles) {
 
 	$scope.page = {
 		title: 'Invitar usuarios',
@@ -18,7 +18,9 @@ angular.module('adminProductsApp')
 				faIcon: 'plus',
 				email: '',
 				index: 0,
-				showIcon: false
+				roleId: null,
+				showIcon: false,
+				is_superuser: false,
 			}]
 		},
 		csvFile: null,
@@ -29,7 +31,37 @@ angular.module('adminProductsApp')
 		}
 	};
 
+	$scope.roles = [];
 	$scope.responseInvitations = [];
+
+	var getRoles = function(e) {
+		$scope.roles = [];
+
+		Roles.query({
+			idOrganization: Utils.getInStorage('organization')
+		}, function(success) {
+			if (success.data) {
+				for (var i = 0; i < success.data.length; i++) {
+					$scope.roles.push({
+						name: success.data[i].attributes.name,
+						id: success.data[i].id,
+						index: i
+					});
+				}
+			} else {
+				$log.log('error al obtener los roles');
+			}
+
+		}, function(error) {
+			$log.log(error);
+			if (error.status === 401) {
+				Utils.refreshToken(getRoles);
+			}
+		});
+
+	};
+
+	getRoles();
 
 	$scope.validateMailAndRol = function(index) {
 
@@ -71,8 +103,6 @@ angular.module('adminProductsApp')
 
 	var uploadCsvInvitation = function() {
 
-		// $log.log($scope.page.csvFile);
-
 		var form = [{
 			field: 'type',
 			value: 'invitations'
@@ -98,9 +128,6 @@ angular.module('adminProductsApp')
 	};
 
 	var sendInvitations = function() {
-
-		// $log.log($scope.page.formGroups.invite);
-
 		$scope.responseInvitations = [];
 		$scope.page.msg.color = 'orange-ps';
 		$scope.page.msg.show = true;
@@ -112,7 +139,7 @@ angular.module('adminProductsApp')
 				"data": {
 					"type": "invitations",
 					"attributes": {
-						"role_id": Utils.getInStorage('role_id'),
+						"role_id": $scope.page.formGroups.invite[i].roleId,
 						"email": $scope.page.formGroups.invite[i].email
 					}
 				}
