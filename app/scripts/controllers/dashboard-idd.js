@@ -14,8 +14,8 @@ angular.module('adminProductsApp')
  	{ 
 		center: 
 		{ 
-			latitude: -33.4428576054363,//-33.3769732, 
-			longitude: -70.6258822605672//-56.5264399 
+			latitude: -33.3769732, 
+			longitude: -56.5264399 
 		}, 
 		zoom: 15 
  	};
@@ -131,10 +131,10 @@ angular.module('adminProductsApp')
 		    	$scope.dashboard.pines = success.data.attributes.report_locations;
 		    	vm.reportes = $scope.dashboard.pines;
 
-				$scope.Mrecibidos = _.where(vm.reportes, {type: "recibido"})
-				$scope.Mresueltos = _.where(vm.reportes, {type: "resuelto"})
+				$scope.Mrecibidos = _.where($scope.dashboard.pines, {type: "recibido"})
+				$scope.Mresueltos = _.where($scope.dashboard.pines, {type: "resuelto"})
 
-				$scope.report = vm.reportes[0];
+				$scope.report = $scope.dashboard.pines[0];
 		    	// FIN MAPA
 		   	}
 		}, function(error) {

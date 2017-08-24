@@ -25,8 +25,8 @@ angular.module('adminProductsApp')
 	 	{ 
 			center: 
 			{ 
-				latitude: -33.4428576054363,//-33.3769732, 
-				longitude: -70.6258822605672//-56.5264399 
+				latitude: -33.3769732, 
+				longitude: -56.5264399 
 			}, 
 			zoom: 15 
 	 	};
