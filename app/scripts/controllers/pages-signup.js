@@ -125,12 +125,12 @@ angular.module('adminProductsApp')
 
 		var rutUnformatted = Utils.replaceAll($scope.page.elements.newUser.rut.text, '.', '');
 
-		 if (!Validators.validateRutCheckDigit(rutUnformatted)) {
+		 /*if (!Validators.validateRutCheckDigit(rutUnformatted)) {
 		 	$scope.page.elements.message.color = 'danger';
 		 	$scope.page.elements.message.text = 'Rut no válido';
 		 	$scope.page.elements.message.show = true;
 		 	return;
-		 }
+		 }*/
 
 		if (!Validators.validateRequiredField($scope.page.elements.newUser.email.text) || !Validators.validateRequiredField($scope.page.elements.newUser.firstName.text) || !Validators.validateRequiredField($scope.page.elements.newUser.lastName.text) || !Validators.validateRequiredField($scope.page.elements.newUser.password.text) || !Validators.validateRequiredField($scope.page.elements.newUser.passwordConfirmation.text)) {
 			$scope.page.elements.message.color = 'danger';
