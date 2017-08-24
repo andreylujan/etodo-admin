@@ -240,14 +240,14 @@ angular.module('adminProductsApp')
 
 	$scope.formatRut = function(rut) {
 
-		if (Validators.validateRutCheckDigit(rut)) {
+		//if (Validators.validateRutCheckDigit(rut)) {
 			$scope.page.elements.newUser.rut.text = Utils.formatRut(rut);
 			$scope.page.elements.saveBtn.disabled = false;
 			$scope.page.elements.newUser.firstName.disabled = false;
 			$scope.page.elements.newUser.lastName.disabled = false;
 			$scope.page.elements.newUser.password.disabled = false;
 			$scope.page.elements.newUser.passwordConfirmation.disabled = false;
-		} else {
+		/*} else {
 			$scope.page.elements.message.color = 'danger';
 		 	$scope.page.elements.message.text = 'Rut no válido';
 		 	$scope.page.elements.message.show = true;
@@ -256,7 +256,7 @@ angular.module('adminProductsApp')
 			$scope.page.elements.newUser.lastName.disabled = true;
 			$scope.page.elements.newUser.password.disabled = true;
 			$scope.page.elements.newUser.passwordConfirmation.disabled = true;
-		}
+		}*/
 
 	};
 });
