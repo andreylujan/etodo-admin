@@ -195,6 +195,7 @@ angular.module('adminProductsApp')
 				$log.log(error);
 				$scope.page.elements.message.color = 'danger';
 				$scope.page.elements.message.text = 'No se ha podido crear el usuario';
+				$scope.page.elements.submessage.text = error.data.errors[0].detail;
 				$scope.page.elements.message.show = true;
 			});
 		}
