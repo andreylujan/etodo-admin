@@ -198,6 +198,7 @@ angular.module('adminProductsApp')
 				$scope.page.elements.submessage.text = error.data.errors[0].detail;
 				$scope.page.elements.message.show = true;
 				$scope.page.elements.submessage.show = true;
+				$scope.page.elements.submessage.color = 'danger';
 			});
 		}
 
