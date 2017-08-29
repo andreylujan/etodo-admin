@@ -98,7 +98,7 @@ angular.module('adminProductsApp')
 			$scope.filter[auxiliar].columnName = $scope.columns[i].title;
 			$scope.filter[auxiliar].relationshipName = $scope.columns[i].relationshipName;
 		}
-		$scope.filter.include = _.findWhere(_.findWhere(included, { name: 'Reclamos'}).items, { path: 'echeckit.reports.list'}).included;
+		$scope.filter.include = 'images,pdfs,state';//_.findWhere(_.findWhere(included, { name: 'Reclamos'}).items, { path: 'echeckit.reports.list'}).included;
 		$scope.filter['page[number]'] = $scope.pagination.pages.current;
 		$scope.filter['page[size]'] = $scope.pagination.pages.size;
 	}
