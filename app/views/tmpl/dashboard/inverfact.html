@@ -26,14 +26,14 @@
                         <div class="col-md-12 solid">
                             <table ng-table="tableParams" show-filter="true" class="table table-custom">
                                 <tr ng-repeat="user in $data">
-                                    <td data-title="'Nombre'" sortable="'fullName'" filter="{ 'fullName': 'text' }">
-                                        {{user.fullName}}
+                                    <td data-title="'Nombre'" sortable="'user_name'" filter="{ 'user_name': 'text' }">
+                                        {{user.user_name}}
                                     </td>
-                                    <td data-title="'Cantidad de Visitas'" sortable="'visitas'" filter="{ 'visitas': 'text' }">
-                                        {{user.visitas}}
+                                    <td data-title="'Cantidad de Visitas'" sortable="'num_reports'" filter="{ 'num_reports': 'text' }">
+                                        {{user.num_reports}}
                                     </td>
-                                    <td data-title="'Empresas visitadas'" sortable="'empresas'" filter="{ 'empresas': 'text' }">
-                                        {{user.empresas}}
+                                    <td data-title="'Empresas visitadas'" sortable="'num_companies'" filter="{ 'num_companies': 'text' }">
+                                        {{user.num_companies}}
                                     </td>
                                 </tr>
                             </table>

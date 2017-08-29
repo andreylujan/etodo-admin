@@ -316,6 +316,26 @@ angular.module('adminProductsApp')
 
 })
 
+/// DASHBOARD INVERFACT
+.factory('DashboardInverfact', function($resource) {
+
+	return $resource(API_URL + '/dashboard/inverfact/', {
+	}, {
+		query: {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/vnd.api+json',
+				Accept: 'application/vnd.api+json'
+			},
+			params: {
+				include: '@include',
+				fieldsReports: '@fieldsReports',
+			}
+		}
+	});
+
+})
+
 /// COLLECTIONS
 .factory('Collection', function($resource) {
 

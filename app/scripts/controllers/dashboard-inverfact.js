@@ -8,7 +8,7 @@
  * Controller of the adminProductsApp
  */
 angular.module('adminProductsApp')
-	.controller('InverfactDashboardCtrl', function($scope, $log, $interval, Utils, NgTableParams) {
+	.controller('InverfactDashboardCtrl', function($scope, $log, $interval, Utils, NgTableParams, DashboardInverfact) {
 	
 	$scope.page = {
  		title: 'Inverfact',
@@ -23,74 +23,79 @@ angular.module('adminProductsApp')
 
  	$scope.dashboard = 
  	{
- 		empresasVisitadas: 9
+ 		empresasVisitadas: 0
  	};
 
- 	var data = [
- 		{
- 			fullName: 'Juan Perez',
- 			visitas: 4,
- 			empresas: 4
- 		},
- 		{
- 			fullName: 'Maria Lopez',
- 			visitas: 7,
- 			empresas: 5
- 		}
- 	];
 
- 	$scope.tableParams = new NgTableParams({
-		page: 1,
-		total: 1, 
-		noPager: true,
-		count: data.length,
-		sorting: {
-			fullName: 'asc'
-		}
-	}, {
-		total: data.length,
-		dataset: data,
-		counts: []
-	});
+ 	$scope.getDashboardInfo = function() {
+ 		DashboardInverfact.query({
+ 			'year': $scope.page.filters.date.value.getFullYear(),
+ 			'month': $scope.page.filters.date.value.getMonth()+1
+ 		}, function(success) {
+		    if (success.data) 
+		    {
+		    	$scope.tableParams = new NgTableParams({
+					page: 1,
+					total: 1, 
+					noPager: true,
+					count: success.data.attributes.reports_by_user.length,
+					sorting: {
+						fullName: 'asc'
+					}
+				}, {
+					total: success.data.attributes.reports_by_user.length,
+					dataset: success.data.attributes.reports_by_user,
+					counts: []
+				});
 
 
-	$scope.titulo = Utils.setChartConfig(
-			'column', 
-			null, 
-			{}, 
-		{
-        	min: 0,
-	        title: {
-	            text: 'Cantidad de Vistas Realizadas'
-	        }
-    	}, 
-		{
-	        type: 'category',
-	        labels: {
-	            style: {
-	                fontSize: '13px',
-	                fontFamily: 'Verdana, sans-serif'
-	            }
-	        }
-	    }, 
-	    [{
-	        name: 'Motivo de visita',
-	        data: [
-	            ['A', 23],
-	            ['B', 16],
-	            ['C', 14],
-	            ['D', 14],
-	            ['E', 12],
-	            ['F', 12]
-	        ]
-	    }],
-	);
+				$scope.dashboard.empresasVisitadas = success.data.attributes.num_companies;
+
+				var datos = [];
+				angular.forEach(success.data.attributes.reports_by_reason, function(value, key){
+					datos.push([value.reason, value.num_reports]);
+				});
+
+
+				$scope.titulo = Utils.setChartConfig(
+					'column', 
+					null, 
+					{}, 
+					{
+			        	min: 0,
+				        title: {
+				            text: 'Cantidad de Vistas Realizadas'
+				        }
+			    	}, 
+					{
+				        type: 'category',
+				        labels: {
+				            style: {
+				                fontSize: '13px',
+				                fontFamily: 'Verdana, sans-serif'
+				            }
+				        }
+				    }, 
+				    [{
+				        name: 'Motivo de visita',
+				        data: datos
+				    }],
+				);
+		   	}
+		}, function(error) {
+			$log.error(error);
+			if (error.status === 401) 
+			{
+				Utils.refreshToken($scope.getDashboardInfo);
+			}
+		});
+	};
+
 
 	$scope.$watch('page.filters.date.loaded', function() {
 		if ($scope.page.filters.date.loaded) {
 			$scope.$watch('page.filters.date.value', function() {
-				$log.error('Debo llamar al servicio');
-				//$scope.getDashboardInfo();
+				$scope.getDashboardInfo();
 			});
 		}
 	});
