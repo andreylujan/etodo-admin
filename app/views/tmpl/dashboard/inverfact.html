@@ -1,0 +1,75 @@
+<div class="page page-dashboard">
+    <div class="pageheader">
+        <h2><b>{{page.title}}</b></h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="gray-ps-1 br-15 b-0">
+                     <p class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup="MM/yyyy" ng-model="page.filters.date.value" is-open="page.filters.date.opened" datepicker-options="{minMode: 'month', showButtonBar: false}" close-text="Cerrar" clear-text="Limpiar" current-text="Hoy" readonly />
+                        <span class="input-group-btn" required>
+                            <button type="button" class="btn btn-default" ng-click="openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <section class="tile">
+                <div class="tile-header dvd dvd-btm">
+                    <h1 class="custom-font"><strong>Cantidad de Vistas Realizadas</strong></h1>
+                </div>
+                <div class="tile-body">
+                    <div class="row">
+                        <div class="col-md-12 solid">
+                            <table ng-table="tableParams" show-filter="true" class="table table-custom">
+                                <tr ng-repeat="user in $data">
+                                    <td data-title="'Nombre'" sortable="'fullName'" filter="{ 'fullName': 'text' }">
+                                        {{user.fullName}}
+                                    </td>
+                                    <td data-title="'Cantidad de Visitas'" sortable="'visitas'" filter="{ 'visitas': 'text' }">
+                                        {{user.visitas}}
+                                    </td>
+                                    <td data-title="'Empresas visitadas'" sortable="'empresas'" filter="{ 'empresas': 'text' }">
+                                        {{user.empresas}}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-4">
+            <section class="tile">
+                <div class="tile-header dvd dvd-btm">
+                    <h1 class="custom-font"><strong>Cantidad de Empresas Realizadas</strong></h1>
+                </div>
+                <div class="tile-body">
+                    <div class="row">
+                        <div class="col-md-12 solid">
+                            <div class="tile-body text-center">
+                                <h1 class="m-0" style="font-size: 500%;"><b>{{dashboard.empresasVisitadas}}</b></h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <section class="tile">
+                <!--div class="tile-header dvd dvd-btm">
+                    <h1 class="custom-font"><strong>TITULO</strong></h1>
+                </div-->
+                <div class="tile-body">
+                    <highchart config="titulo"></highchart>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

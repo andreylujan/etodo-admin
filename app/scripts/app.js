@@ -156,6 +156,11 @@ angular
 				templateUrl: 'views/tmpl/dashboard/idd.html',
 				controller: 'IDDDashboardCtrl'
 			})
+			.state('echeckit.dashboard.inverfact', {
+				url: '/inverfact',
+				templateUrl: 'views/tmpl/dashboard/inverfact.html',
+				controller: 'InverfactDashboardCtrl'
+			})
 
 		// Channels
 		.state('echeckit.channel', {

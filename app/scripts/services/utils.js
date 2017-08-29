@@ -127,7 +127,7 @@ angular.module('adminProductsApp')
 		// 	type = 'column';
 		// }
 		
-		var colores = ['#FFC803', '#F25F4D', '#405B72'];
+		var colores = ['#405B72', '#FFC803', '#F25F4D'];
 		/*if (!height) {
 			height = 250;
 		}*/
