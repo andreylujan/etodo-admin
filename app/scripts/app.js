@@ -204,6 +204,11 @@ angular
 				templateUrl: 'views/tmpl/reports/dom.html',
 				controller: 'ReportsListMyDomEcheckitCtrl'
 			})
+			.state('echeckit.reports.idd', {
+				url: '/idd',
+				templateUrl: 'views/tmpl/reports/idd.html',
+				controller: 'ReportsListIddCtrl'
+			})
 
 		//Tasks
 		.state('echeckit.tasks', {

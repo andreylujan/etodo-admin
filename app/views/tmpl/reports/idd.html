@@ -1,0 +1,265 @@
+<div class="page">
+
+	<!-- page header -->
+	<div class="pageheader">
+
+		<h2>{{page.title}} <span></span></h2>
+
+		<div class="page-bar">
+
+			<ul class="page-breadcrumb">
+				<li>
+					<a ui-sref="{{main.url}}"> {{main.title}}</a>
+				</li>
+				<li>
+					<a href="javascript:;">Reportes</a>
+				</li>
+				<li>
+					<a ui-sref="app.playStation.reports">{{page.title}}</a>
+				</li>
+			</ul>
+
+		</div>
+
+	</div>
+	<!-- /page header -->
+
+	<!-- page content -->
+	<div class="pagecontent">
+
+		<!-- row -->
+		<div class="row">
+
+			<!-- col -->
+			<div class="col-md-12">
+
+
+				<!-- tile -->
+				<section class="tile" fullscreen="isFullscreen06">
+					<!-- tile body -->
+					<div class="tile-body">
+
+						<div class="row">
+							<div class="col-md-2">
+								<button class="bg-blue-ps pt-7 pb-7 pr-12 pl-12 br-15 b-0 text-white ml-20 mb-10" ng-click="openModalDownloadPdfsByMonth()" uib-tooltip="Descargar PDF's"><i class="fa fa-cloud-download"></i></button>
+							</div>
+						</div>
+						<table ng-table="tableParams" show-filter="true" class="table table-custom">
+							<thead>
+								<tr>
+									<th ng-repeat="column in columns2" class="text-center sortable" ng-click="sortBy(column.field_a)"> {{column.title}} </th>
+									<th class="text-center"> Asignar </th>
+								</tr>
+								<tr>
+									<th ng-repeat="column in columns2" class="text-center sortable" >
+										<input type="text" class="form-control" ng-model="filter[column.filter].filter"/>
+									</th>
+									<th class="text-center" ></th>
+								</tr>
+							</thead>
+
+							<tbody>
+								<tr ng-repeat="report in $data | filter: filtro">
+									<td ng-repeat="column in columns2">
+										<p data-ng-bind-html="trustAsHtml(report[column.field_a])"></p>
+									</td>
+									<td>
+										<a ng-click="AssignedUser(report.id)" ng-if="report.state ==12 ">Asignar</a>
+										<label ng-if="report.state == 13">Asignado</label>
+										<label ng-if="report.state != 13 && report.state != 12">-</label>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="row">
+							<div class="col-md-6" style="margin: 0 auto;float: none;">
+								<pager prev="decrementPage()" next="incrementPage()" change-page="getReports({success:true,detail:'OK'},pagination.pages.current)" current="pagination.pages.current" total="pagination.pages.total"></pager>
+							</div>
+						</div>
+					</div>
+					<!-- /tile body -->
+				</section>
+				<!-- /tile -->
+
+			</div>
+			<!-- /col -->
+
+
+		</div>
+		<!-- /row -->
+	</div>
+
+	<script type="text/ng-template" id="AssignedUser.html">
+		<div class="modal-content">
+			<div class="modal-header ng-scope">
+            	<h3 class="modal-title custom-font" style="text-align: center;">Asignar usuario resolutor</h3>
+        	</div>
+         	<div class="modal-body ng-scope">
+         		<div class="alert alert-{{elements.alert.color}}" ng-show="elements.alert.show"> 
+         			<h4 class="text-md"><strong>{{elements.alert.title}}</strong></h4> {{elements.alert.text}} 
+         		</div>
+         		<div style="text-align: center;">
+         			<form class="form-horizontal form-validation" name="form" novalidate>
+         				<div>
+		         			<label class="ng-binding" style="font-weight: 900;">Departamento:</label> 
+		         			<ui-select class="bg-white b-solid br-15" ng-model="departamentos.selected" close-on-select="true">
+		  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
+		  						<ui-select-choices repeat="depa in departamentos.data" refresh-delay="200">
+		  							<div ng-bind-html="depa.name"></div>
+		  						</ui-select-choices>
+		  					</ui-select>
+		  				</div>
+		  				<div>
+		         			<label class="ng-binding" style="font-weight: 900;">Categorias:</label> 
+		         			<ui-select class="bg-white b-solid br-15" ng-model="categorias.selected" close-on-select="true">
+		  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
+		  						<ui-select-choices repeat="cate in categorias.data" refresh-delay="200">
+		  							<div ng-bind-html="cate.name"></div>
+		  						</ui-select-choices>
+		  					</ui-select>
+		  				</div>
+		  				<div>
+		         			<label class="ng-binding" style="font-weight: 900;">Comentarios:</label> 
+		         			<textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" rows="5" placeholder="Comentario..." ng-model="comentario.value" aria-invalid="false" required></textarea>
+		  				</div>
+		  				<div>
+		         			<label class="ng-binding" style="font-weight: 900;">Fecha de resolución:</label> 
+
+		         			<input type="text" class="form-control rounded" uib-datepicker-popup="{{$filter('capitalize')}}dd/MM/yyyy" ng-model="fecha.value" is-open="fecha.opened" datepicker-options="{ showWeeks: false}" show-button-bar="false" readonly ng-click="openDatePicker($event)" />
+		  				</div>
+
+	         			<div>
+		         			<label class="ng-binding" style="font-weight: 900;">Personal asignado:</label> 
+		         			<ui-select class="bg-white b-solid br-15" ng-model="usuarios.selected" close-on-select="true">
+		  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
+		  						<ui-select-choices repeat="user in usuarios.data" refresh-delay="200">
+		  							<div ng-bind-html="user.name"></div>
+		  						</ui-select-choices>
+		  					</ui-select>
+		  				</div>
+		  				<br>
+		  				<br>
+		  				<br>
+
+		  				<div class="row">
+		  					<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" ng-disabled="form.$invalid" type="button" ng-click="asignarUsuario()" >{{elements.buttons.cambiar.text}}</button>
+		  				</div>
+	         		</form>
+         		</div>
+            </div>
+        </div>
+	</script>
+	<!-- /page content -->
+	<!--script type="text/ng-template" id="modalDownloadPdfsByMonth.html">
+		<div class="modal-header text-center">
+			<h3>Descargar Excel de reportes</h3>
+		</div>
+
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-{{modal.alert.color}}" ng-show="modal.alert.show"> <h4 class="text-md"><strong>{{modal.alert.title}}</strong></h4> {{modal.alert.text}} </div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label class="col-sm-5 control-label">Descargar reportes del mes</label>
+							<div class="col-sm-6">
+								<p class="input-group">
+									<input type="text" class="form-control" uib-datepicker-popup="MM/yyyy" ng-model="modal.month.date" is-open="modal.datepicker.opened" datepicker-options="{minMode: 'month', showButtonBar: false}" />
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-default" ng-click="openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+									</span>
+								</p>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="modal-footer">
+			<a class="btn bg-cyan-1-generic btn-rounded-10 mb-10" id="downloadReportsByMonth" ng-href="" ng-click="downloadReports()" ng-disabled="modal.buttons.download.disabled"><i class="fa fa-cloud-download" uib-tooltip="Descargar PDF's"></i> {{modal.buttons.download.text}}</a>
+			<button class="btn btn-cancelRecit btn-rounded-10 mb-10" type="button" ng-click="cancel()">Cerrar</button>
+		</div>
+	</script-->
+
+	<!--script type="text/ng-template" id="modalDownloadPdfs.html">
+		<div class="modal-header text-center">
+			<h3>Descargar PDF's</h3>
+			<h4>Seleccione los filtros para buscar los PDF's de reportes y descargar</h4>
+		</div>
+
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="alert alert-{{modal.alert.color}}" ng-show="modal.alert.show"> <h4 class="text-md"><strong>{{modal.alert.title}}</strong></h4> {{modal.alert.text}} </div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+
+			<style>
+				.multiselect-parent,.dropdown-toggle,.dropdown-menu-form  {
+					width: 100%;
+				}
+			</style>
+
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					<label class="col-sm-3 control-label">Creados entre</label>
+					<div class="col-sm-8">
+						<input style="cursor:pointer" id="daterangeDashGoals2" date-range-picker class="form-control date-picker" type="text" ng-model="modal.dateRange.date" ng-change="removeMessage()" options="modal.dateRange.options" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">Cliente</label>
+					<div class="col-sm-8">
+						<select class="form-control" ng-options="client.name for client in modal.clients.list track by client.id" ng-model="modal.clients.selected" ng-change="removeMessage()"></select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">Ejecutores</label>
+					<div class="col-sm-8">->
+						<div ng-dropdown-multiselect="" options="modal.executers.list" selected-model="modal.executers.selected" extra-settings="modal.dropdownMultiselect.settings" translation-texts="modal.dropdownMultiselect.texts" events="" ng-dropdown-multiselect-disabled=""></div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">Clase equipo</label>
+					<div class="col-sm-8">
+						<select class="form-control" ng-options="equipmentClass.name for equipmentClass in modal.classes.list track by equipmentClass.id" ng-model="modal.classes.selected" ng-change="removeMessage()"></select>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-3 control-label">Territorios</label>
+					<div class="col-sm-8">
+						<div ng-dropdown-multiselect="" options="modal.territories.list" selected-model="modal.territories.selected" extra-settings="modal.dropdownMultiselect.settings" translation-texts="modal.dropdownMultiselect.texts" events="" ng-dropdown-multiselect-disabled=""></div>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">Tipo de Actividad</label>
+					<div class="col-sm-8">
+						<select class="form-control" ng-options="activityType.name for activityType in activityTypesUnique track by activityType.id" ng-model="activityTypeSelected" ng-change="removeMessage()"></select>
+					</div>
+				</div>
+				
+			</form>
+		</div>
+	</div>
+
+</div>
+
+	<div class="modal-footer">
+		<a class="btn bg-blue-ps btn-rounded-10 mb-10" id="zipBtn" ng-href="" ng-click="downloadZip()" ng-disabled="zipBtnDisabled"><i class="fa fa-cloud-download" uib-tooltip="Descargar PDF's"></i></a>
+		<button class="btn btn-cancelRecit btn-rounded-10 mb-10" type="button" ng-click="cancel()">Cerrar</button>
+	</div>
+
+</script-->
+
+</div>
