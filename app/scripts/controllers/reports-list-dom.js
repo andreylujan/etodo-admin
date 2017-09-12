@@ -1063,13 +1063,13 @@ angular.module('adminProductsApp')
 	    $scope.report.attributes = data.object.attributes;
 	    $scope.getCollectionTipo();
 	    $scope.getCollectionConstructora();
-	    if ($scope.report.attributes.dynamic_attributes['73'].value == 'true') 
+	    if ($scope.report.attributes.dynamic_attributes['100'].value == 'true') 
 	    {
-	    	$scope.report.attributes.dynamic_attributes['73'].value = true;
+	    	$scope.report.attributes.dynamic_attributes['100'].value = true;
 	    }
 	    else
 	    {
-	    	$scope.report.attributes.dynamic_attributes['73'].value = false;
+	    	$scope.report.attributes.dynamic_attributes['100'].value = false;
 	    }
 	});
 })
