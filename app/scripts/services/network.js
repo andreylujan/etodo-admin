@@ -278,7 +278,7 @@ angular.module('adminProductsApp')
 /// DASHBOARD
 .factory('Dashboard', function($resource) {
 
-	return $resource(API_URL + '/dashboard', {
+	return $resource(API_URL + '/dashboard/generic', {
 	}, {
 		query: {
 			method: 'GET',

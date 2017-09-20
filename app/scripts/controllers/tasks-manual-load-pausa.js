@@ -9,7 +9,7 @@
  */
  angular.module('adminProductsApp')
 
- .controller('ManualLoadPausaCtrl', function($scope, $log, $uibModal, $filter, Users, Locations, Equipments, Categories, Activities, Reports, Utils, Validators) {
+ .controller('ManualLoadPausaCtrl', function($scope, $log, $uibModal, $filter, Users, Reports, Utils, Collection, Validators) {
 
  	$scope.page = {
  		forms: {},
@@ -49,96 +49,8 @@
  	};
  	var i = 0;
 
- 	$scope.isBelltech = function() {
- 		var organizationId = Utils.getInStorage('organization_id');
- 		if(!organizationId) {
- 			return true;
- 		} else {
- 			return organizationId == "1";
- 		}
- 	};
-
- 	$scope.isAntalis = function() {
- 		var organizationId = Utils.getInStorage('organization_id');
- 		if(!organizationId) {
- 			return false;
- 		} else {
- 			return organizationId == "4";
- 		}
- 	}
-
  	$scope.openDatepicker = function() {
  		$scope.page.dateOptions.datepickerOpened = true;
- 	};
-
- 	$scope.getCategories = function(filter) {
- 		Categories.query({
-			// fields[equipments]: filter
-		}, function(success) {
-			$scope.page.categories = [];
-			if (success.data) {
-				$scope.page.categories.push({
-					id: '',
-					serial_number: 'Seleccione categoría',
-					disabled: true
-				});
-
-				//$log.error(success.data);
-				for (var i = 0; i < success.data.length; i++) {
-					$scope.page.categories.push({
-						id: success.data[i].id,
-						serial_number: $filter('capitalize')(success.data[i].attributes.name, true),
-						disabled: false
-					});
-				}
-				$scope.page.selectedCategories = $scope.page.categories[0];
-				$scope.page.categoriesLoaded = true;
-
-			} else {
-				$log.error(success);
-			}
-
-		}, function(error) {
-			$log.error(error);
-			if (error.status === 401) {
-				Utils.refreshToken($scope.getCategories);
-			}
-		});
- 	};
-
- 	$scope.getLocations = function(filter) {
- 		Locations.query({
-			// fields[equipments]: filter
-		}, function(success) {
-			$scope.page.locations = [];
-			if (success.data) {
-				$scope.page.locations.push({
-					id: '',
-					name_location: 'Seleccione lugar',
-					disabled: true
-				});
-
-				//$log.error(success.data);
-				for (var i = 0; i < success.data.length; i++) {
-					$scope.page.locations.push({
-						id: success.data[i].id,
-						name_location: $filter('capitalize')(success.data[i].attributes.name, true),
-						disabled: false
-					});
-				}
-				$scope.page.selectedLocations = $scope.page.locations[0];
-				$scope.page.LocationsLoaded = true;
-
-			} else {
-				$log.error(success);
-			}
-
-		}, function(error) {
-			$log.error(error);
-			if (error.status === 401) {
-				Utils.refreshToken($scope.getLocations);
-			}
-		});
  	};
 
  	$scope.getUsers = function() {
@@ -174,37 +86,75 @@
  		});
  	};
 
- 	$scope.getActivityTypes = function() {
+ 	$scope.getCategories = function(filter) {
+ 		Collection.query({
+			idCollection: 35
+		}, function(success) {
+			$scope.page.categories = [];
+			if (success.data) {
 
- 		$scope.page.activityTypes = [];
+				$scope.page.categories.push({
+					id: '',
+					serial_number: 'Seleccione categoría',
+					disabled: true
+				});
 
- 		Activities.query({
- 			idActivity: ''
- 		}, function(success) {
+				//$log.error(success.data);
+				for (var i = 0; i < success.included.length; i++) {
+					$scope.page.categories.push({
+						id: success.included[i].id,
+						serial_number: $filter('capitalize')(success.included[i].attributes.name, true),
+						disabled: false
+					});
+				}
+				$scope.page.selectedCategories = $scope.page.categories[0];
+				$scope.page.categoriesLoaded = true;
 
- 			$scope.page.activityTypes.push({
- 				id: '',
- 				name: 'Seleccione tipo de actividad',
- 				disabled: true
- 			});
+			} else {
+				$log.error(success);
+			}
 
- 			for (var i = 0; i < success.data.length; i++) {
- 				$scope.page.activityTypes.push({
- 					id: success.data[i].id,
- 					name: success.data[i].attributes.name,
- 					disabled: false
- 				});
- 			}
- 			$scope.page.selectedActivityType = $scope.page.activityTypes[0];
- 			$scope.page.activityTypesLoaded = true;
+		}, function(error) {
+			$log.error(error);
+			if (error.status === 401) {
+				Utils.refreshToken($scope.getCategories);
+			}
+		});
+ 	};
 
+ 	$scope.getLocations = function(filter) {
+ 		Collection.query({
+			idCollection: 36
+		}, function(success) {
+			$scope.page.locations = [];
+			if (success.data) {
+				$scope.page.locations.push({
+					id: '',
+					name_location: 'Seleccione lugar',
+					disabled: true
+				});
 
- 		}, function(error) {
- 			$log.error(error);
- 			if (error.status == 401) {
- 				Utils.refreshToken($scope.getActivityTypes);
- 			}
- 		});
+				//$log.error(success.data);
+				for (var i = 0; i < success.included.length; i++) {
+					$scope.page.locations.push({
+						id: success.included[i].id,
+						name_location: $filter('capitalize')(success.included[i].attributes.name, true),
+						disabled: false
+					});
+				}
+				$scope.page.selectedLocations = $scope.page.locations[0];
+				$scope.page.LocationsLoaded = true;
+
+			} else {
+				$log.error(success);
+			}
+
+		}, function(error) {
+			$log.error(error);
+			if (error.status === 401) {
+				Utils.refreshToken($scope.getLocations);
+			}
+		});
  	};
 
  	$scope.manualLoad = function() {
@@ -307,33 +257,34 @@
  					"limit_date": limitDate,
  					"finished": false,
  					"dynamic_attributes": {
- 						"115": {
- 							"text": $scope.page.selectedCategories.serial_number,
+ 						"101": {
+ 							"value": $scope.page.selectedCategories.serial_number,
  							"id": $scope.page.selectedCategories.id,
  							"editable": isEditable($scope.page.selectedCategories.serial_number)
  						},
- 						"116":{
- 							"text": $scope.page.selectedLocations.name_location,
+ 						"102":{
+ 							"value": $scope.page.selectedLocations.name_location,
  							"id": $scope.page.selectedLocations.id,
  							"editable": isEditable($scope.page.selectedLocations.name_location)
  						},
- 						"117":{
- 							"text": $scope.page.caja,
+ 						"104":{
+ 							"value": $scope.page.caja,
  							"editable": isEditable($scope.page.caja)
  						},
- 						"118":{
- 							"text": $scope.page.contador,
+ 						"105":{
+ 							"value": $scope.page.contador,
  							"editable": isEditable($scope.page.contador)
  						},
- 						"119":{
- 							"text": $scope.page.requerimiento,
+ 						"107":{
+ 							"value": $scope.page.requerimiento,
  							"editable": isEditable($scope.page.requerimiento)
  						},
- 						"137":{
- 							"text": $scope.page.sillon,
+ 						"103":{
+ 							"value": $scope.page.sillon,
  							"editable": isEditable($scope.page.sillon)
  						}
  					},
+ 					"state_id": 24
  				},
  				"relationships": {
  					"assigned_user": {
@@ -359,7 +310,6 @@
 				$scope.getUsers();
 				$scope.getCategories();
 				$scope.getLocations();
-				$scope.getActivityTypes();
 				$scope.$apply();
 			}, function(error) {
 				if (error.status == 401) {
@@ -395,15 +345,6 @@
  	};
 
  	$scope.equipments = [];
-
- 	$scope.cargarEquiposSerialNumber = function(asd) {
-
-
- 	};
-
  	$scope.getUsers();
- 	$scope.getCategories();
- 	$scope.getLocations();
- 	$scope.getActivityTypes();
 
  });
