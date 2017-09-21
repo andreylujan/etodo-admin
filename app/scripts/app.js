@@ -209,6 +209,11 @@ angular
 				templateUrl: 'views/tmpl/reports/idd.html',
 				controller: 'ReportsListIddCtrl'
 			})
+			.state('echeckit.reports.inverfact', {
+				url: '/inverfact',
+				templateUrl: 'views/tmpl/reports/list.html',
+				controller: 'ReportsListInverfactCtrl'
+			})
 
 		//Tasks
 		.state('echeckit.tasks', {
