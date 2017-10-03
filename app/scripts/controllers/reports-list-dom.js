@@ -167,9 +167,13 @@ angular.module('adminProductsApp')
 					test[test.length - 1]['id'] 			= success.data[i].id;
 					test[test.length - 1]['negocio'] 		= '';
 
-					if (success.data[i].attributes.dynamic_attributes['60'] != undefined) 
+					if (success.data[i].attributes.dynamic_attributes['61'] != undefined) 
 					{
-						test[test.length - 1]['negocio'] 		= success.data[i].attributes.dynamic_attributes['60'].value;
+						test[test.length - 1]['negocio'] = false;
+					}
+					if (success.data[i].attributes.dynamic_attributes['63'] != undefined) 
+					{
+						test[test.length - 1]['negocio'] = true;
 					}
 
 					//if (success.data[i].dynamic_attributes) {}
@@ -1398,9 +1402,16 @@ angular.module('adminProductsApp')
 
 	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
 	$scope.negocioCerrado = function (callback) {
-		$scope.dynamic_attributes['60'] = { value: $scope.report.cierreNegocio.value };
-		$scope.dynamic_attributes['61'] = { value: $scope.motivoPerdida.selected.name, id: $scope.motivoPerdida.selected.id };
-		$scope.dynamic_attributes['63'] = { value: $scope.report.montoCierre.value };
+		
+		if ($scope.report.cierreNegocio.value) 
+		{
+			$scope.dynamic_attributes['63'] = { value: $scope.report.montoCierre.value };
+		}
+		else
+		{
+			$scope.dynamic_attributes['61'] = { value: $scope.motivoPerdida.selected.name, id: $scope.motivoPerdida.selected.id };
+		}
+
 		$scope.dynamic_attributes['62'] = { value: $scope.report.comentario.value };
 
 		var aux = {};
