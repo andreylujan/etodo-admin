@@ -235,6 +235,11 @@ angular
 				templateUrl: 'views/tmpl/tasks/manual-load-pausa.html',
 				controller: 'ManualLoadPausaCtrl'
 			})
+			.state('echeckit.tasks.manual-load-pausap', {
+				url: '/carga-manual-pausaperu',
+				templateUrl: 'views/tmpl/tasks/manual-load-pausap.html',
+				controller: 'ManualLoadPausaPeruCtrl'
+			})
 			.state('echeckit.tasks.manual-load-demo', {
 				url: '/carga-manual-demo',
 				templateUrl: 'views/tmpl/tasks/manual-load-demo.html',
