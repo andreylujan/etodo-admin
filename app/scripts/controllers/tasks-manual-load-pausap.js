@@ -262,7 +262,7 @@
  							"id": $scope.page.selectedCategories.id,
  							"editable": isEditable($scope.page.selectedCategories.serial_number)
  						},
- 						"120":{
+ 						"110":{
  							"value": $scope.page.selectedLocations.name_location,
  							"id": $scope.page.selectedLocations.id,
  							"editable": isEditable($scope.page.selectedLocations.name_location)

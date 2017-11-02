@@ -155,8 +155,6 @@ angular.module('adminProductsApp')
 			reportsIncluded = success.included;
 			$scope.pagination.pages.total = success.meta.page_count;
 
-			//$log.error(success.data);
-
 			for (i = 0; i < success.data.length; i++) {
 				test.push({});
 
