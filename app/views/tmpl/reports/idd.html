@@ -61,7 +61,7 @@
 							<tbody>
 								<tr ng-repeat="report in $data | filter: filtro">
 									<td ng-repeat="column in columns2">
-										<p data-ng-bind-html="trustAsHtml(report[column.field_a])"></p>
+										<p data-ng-bind-html="trustAsHtml(report[column.field_a].toString())"></p>
 									</td>
 									<td>
 										<a ng-click="AssignedUser(report.id)" ng-if="report.state ==12 ">Asignar</a>

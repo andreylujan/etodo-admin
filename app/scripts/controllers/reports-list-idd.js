@@ -53,6 +53,7 @@ angular.module('adminProductsApp')
 	$scope.columns = _.where(Utils.getInStorage('report_columns'), {visible: true});
 	$scope.filter = {};
 	var included = Utils.getInStorage('menu');
+	//$log.error($scope.columns);
 
 	for (i = 0; i < $scope.columns.length; i++) {
 
@@ -713,7 +714,7 @@ angular.module('adminProductsApp')
 	$scope.asignarUnUsuario = function (callback) {
 
 		var day = $scope.fecha.value.getDate();
- 		var monthIndex = $scope.fecha.value.getMonth();
+ 		var monthIndex = $scope.fecha.value.getMonth()+1;
   		var year = $scope.fecha.value.getFullYear();
 
 		$scope.report.attributes.dynamic_attributes['83'] = {
