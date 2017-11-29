@@ -191,33 +191,54 @@ angular.module('adminProductsApp')
 								if (relationships.length == 1) 
 								{
 									for (k = 0; k < success.included.length; k++) {
-										//TRUE = Su relacion tiene un indice de objeto, el cual indica el objeto dentro del arreglo de include, cual es el indice al cual apuntar
+										//TRUE = Su relacion tiene un indice de objeto, 
+										//el cual indica el objeto dentro del arreglo de include, 
+										//cual es el indice al cual apuntar
 										if (_.contains($scope.columns2[j].relationshipName, '[') && _.contains($scope.columns2[j].relationshipName, ']')) 
 										{
 											var indice = $scope.columns2[j].relationshipName.split('[').pop().split(']').shift();
 											var relacion = $scope.columns2[j].relationshipName.substring(0,$scope.columns2[j].relationshipName.lastIndexOf("["));
 
-											if (success.data[i].relationships[relacion].data[indice] != null) 
-											{
+											if (relacion == 'pdfs') {
+												var ids = _.map(success.data[i].relationships[relacion].data, function(rep){ return rep.id; });
+												var pdfs = _.filter(
+														_.sortBy(
+															_.where(success.included, {type: "pdfs"}), function(num){ return num.attributes.pdf_template_id; }), 
+														function(x) { return x.id == ids[0]  || x.id == ids[1] });
 
-												if (success.data[i].relationships[relacion].data[indice].id === success.included[k].id &&
-												success.data[i].relationships[relacion].data[indice].type === success.included[k].type) 
+												if (pdfs[indice].attributes[$scope.columns2[j].field] != null) 
 												{
-													if (success.included[k].attributes[$scope.columns2[j].field] != null) 
+													test[test.length - 1][$scope.columns2[j].field_a] = pdfs[indice].attributes[$scope.columns2[j].field];
+												}
+												else
+												{
+													test[test.length - 1][$scope.columns2[j].field_a] = '-';
+												}
+
+											}
+											else {
+												if (success.data[i].relationships[relacion].data[indice] != null) 
+												{
+
+													if (success.data[i].relationships[relacion].data[indice].id === success.included[k].id &&
+													success.data[i].relationships[relacion].data[indice].type === success.included[k].type) 
 													{
-														test[test.length - 1][$scope.columns2[j].field_a] = success.included[k].attributes[$scope.columns2[j].field];
+														if (success.included[k].attributes[$scope.columns2[j].field] != null) 
+														{
+															test[test.length - 1][$scope.columns2[j].field_a] = success.included[k].attributes[$scope.columns2[j].field];
+														}
+														else
+														{
+															test[test.length - 1][$scope.columns2[j].field_a] = '-';
+														}
+														break;
 													}
-													else
-													{
-														test[test.length - 1][$scope.columns2[j].field_a] = '-';
-													}
+												}
+												else
+												{
+													test[test.length - 1][$scope.columns2[j].field_a] = '-';
 													break;
 												}
-											}
-											else
-											{
-												test[test.length - 1][$scope.columns2[j].field_a] = '-';
-												break;
 											}
 										} 
 										else 
@@ -230,7 +251,6 @@ angular.module('adminProductsApp')
 												{
 													if (success.included[k].attributes[$scope.columns2[j].field] != null) 
 													{
-														//$log.error(success.included[k].attributes[$scope.columns2[j].field]);
 														test[test.length - 1][$scope.columns2[j].field_a] = success.included[k].attributes[$scope.columns2[j].field];
 													}
 													else
