@@ -162,4 +162,46 @@ angular.module('adminProductsApp')
 			series: series
 		};
 	};
+
+	this.setChartConfigIDD = function(type, height, plotOptions, yAxisData, xAxisData, series) {
+		// if (!type) {
+		// 	type = 'column';
+		// }
+		
+		var colores = ['#af2424', '#8fd9f7', '#bfefe3', '#66c475', 
+						'#c4ea7c', '#3454d3', '#d971fc', '#ffdbad'];
+		/*if (!height) {
+			height = 250;
+		}*/
+		return {
+			options: {
+				title: {
+					text: null
+				},
+				navigation: {
+					buttonOptions: {
+						enabled: true
+					}
+				},
+				colors: colores,
+				tooltip: {
+					style: {
+						padding: 10,
+						fontWeight: 'bold'
+					}
+				},
+				chart: {
+					type: type,
+					height: height
+				},
+				plotOptions: plotOptions,
+				credits: {
+					enabled: false
+				}
+			},
+			yAxis: yAxisData,
+			xAxis: xAxisData,
+			series: series
+		};
+	};
 });
