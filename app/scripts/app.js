@@ -161,6 +161,11 @@ angular
 				templateUrl: 'views/tmpl/dashboard/inverfact.html',
 				controller: 'InverfactDashboardCtrl'
 			})
+			.state('echeckit.dashboard.intralot', {
+				url: '/intralot',
+				templateUrl: 'views/tmpl/dashboard/intralot.html',
+				controller: 'IntralotDashboardCtrl'
+			})
 
 		// Channels
 		.state('echeckit.channel', {
