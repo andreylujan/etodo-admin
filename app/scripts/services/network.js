@@ -336,6 +336,26 @@ angular.module('adminProductsApp')
 
 })
 
+/// DASHBOARD INTRALOT
+.factory('DashboardIntralot', function($resource) {
+
+	return $resource(API_URL + '/dashboard/intralot/', {
+	}, {
+		query: {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/vnd.api+json',
+				Accept: 'application/vnd.api+json'
+			},
+			params: {
+				include: '@include',
+				fieldsReports: '@fieldsReports',
+			}
+		}
+	});
+
+})
+
 /// COLLECTIONS
 .factory('Collection', function($resource) {
 
