@@ -75,8 +75,6 @@ angular.module('adminProductsApp')
  		}, function(success) {
 		    if (success.data) 
 		    {
-		    	$log.error(success.data.attributes)
-
 		    	$scope.dashboard.reports_by_day = success.data.attributes.report_counts.num_reports_by_day;
 		    	$scope.dashboard.current_month = success.data.attributes.report_counts.num_current_month;
 
@@ -104,9 +102,43 @@ angular.module('adminProductsApp')
 					reports_by_week.push({ name: i, count: reports_by_user[i]});
    				}
    				setTableReportsByWeek(reports_by_week);
-   				//setTableReportsByUserCurrentMonth(reports_by_week);
 
+   				var reports_last_fifteen = [];
+   				var reports_last_fifteen_days =  _.countBy(_.map(success.data.attributes.reports_last_fifteen_days, 
+						function(r){ return moment(r.created_at).format('D/M'); }),
+					function(report) {
+						return report;
+				})
 
+				for (var i in reports_last_fifteen_days) {
+					reports_last_fifteen.push({ name: i, data: reports_last_fifteen_days[i]});
+   				}
+   				$scope.titulo = Utils.setChartConfig(
+					'spline', 
+					null, 
+					{
+						column: {
+				            dataLabels: {
+				                enabled: true
+				            },
+				            enableMouseTracking: false
+				        }
+					}, 
+					{
+			        	min: 0,
+				        title: {
+				            text: 'Cantidad de Reportes en los ultimos 15 días'
+				        }
+			    	}, 
+					{
+				        categories: _.map(reports_last_fifteen, function(num, key){ return num.name; }),
+				        crosshair: true
+				    },
+				    [{
+				    	name: 'Cantidad de reportes',
+				    	data: _.map(reports_last_fifteen, function(num, key){ return num.data; })
+				    }]
+				);
 		   	}
 		}, function(error) {
 			$log.error(error);
