@@ -924,7 +924,6 @@ angular.module('adminProductsApp')
 
 	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
 	$scope.editarReport = function (callback) {
-		$log.error($scope.report.attributes.dynamic_attributes['65'])
 		if ($scope.report.attributes.dynamic_attributes['65'] != undefined && 
 			$scope.report.attributes.dynamic_attributes['66'] != undefined) 
 		{
