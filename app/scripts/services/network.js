@@ -1,9 +1,9 @@
 'use strict';
 
-//var API_URL = 'http://50.16.161.152/efinding/api/v1';		//Producción
-//var URL_SERVER = 'http://50.16.161.152/efinding/';		//Producción
-var API_URL = 'http://50.16.161.152/efinding-staging/api/v1';		//Desarrollo
-var URL_SERVER = 'http://50.16.161.152/efinding-staging/';		//Desarrollo
+var API_URL = 'http://50.16.161.152/productos/api/v1';		//Producción
+var URL_SERVER = 'http://50.16.161.152/productos/';		//Producción
+//var API_URL = 'http://50.16.161.152/efinding-staging/api/v1';		//Desarrollo
+//var URL_SERVER = 'http://50.16.161.152/efinding-staging/';		//Desarrollo
 //var API_URL = 'http://localhost:3000/api/v1';						//Local
 //var URL_SERVER = 'http://localhost:3000/';							//Local
 
@@ -278,7 +278,7 @@ angular.module('adminProductsApp')
 /// DASHBOARD
 .factory('Dashboard', function($resource) {
 
-	return $resource(API_URL + '/dashboard', {
+	return $resource(API_URL + '/dashboard/generic', {
 	}, {
 		query: {
 			method: 'GET',
@@ -320,6 +320,26 @@ angular.module('adminProductsApp')
 .factory('DashboardInverfact', function($resource) {
 
 	return $resource(API_URL + '/dashboard/inverfact/', {
+	}, {
+		query: {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/vnd.api+json',
+				Accept: 'application/vnd.api+json'
+			},
+			params: {
+				include: '@include',
+				fieldsReports: '@fieldsReports',
+			}
+		}
+	});
+
+})
+
+/// DASHBOARD INTRALOT
+.factory('DashboardIntralot', function($resource) {
+
+	return $resource(API_URL + '/dashboard/intralot/', {
 	}, {
 		query: {
 			method: 'GET',

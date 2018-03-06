@@ -37,8 +37,8 @@
 							<i class="fa fa-file-text fa-4x"></i>
 						</div>
 						<div class="col-xs-8">
-							<p class="text-elg text-strong mb-0">{{dashboard.data.reportCounts.numCurrentMonth}}</p>
-							<span>Reportes este mes</span>
+							<p class="text-elg text-strong mb-0">{{dashboard.reports_by_day}}</p>
+							<span>Reportes del día</span>
 						</div>
 					</div>
 
@@ -56,8 +56,8 @@
 							<i class="fa fa-file-text-o fa-4x"></i>
 						</div>
 						<div class="col-xs-8">
-							<p class="text-elg text-strong mb-0">{{dashboard.data.reportCounts.numLastMonth}}</p>
-							<span>Reportes mes anterior</span>
+							<p class="text-elg text-strong mb-0">{{dashboard.current_month}}</p>
+							<span>Reportes mes actual</span>
 						</div>
 					</div>
 
@@ -80,34 +80,48 @@
 					<!-- tile header -->
 					<div class="tile-header dvd dvd-btm">
 						<h1 class="custom-font">Evolución de reportes</h1>
-						<ul class="controls">
-							<li class="dropdown" dropdown on-toggle="toggled(open)">
-
-								<a href dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
-
-								<ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
-									<li>
-										<a href tile-control-toggle>
-											<span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;Minimizar</span>
-											<span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;Maximizar</span>
-										</a>
-									</li>
-									<li>
-										<a href tile-control-fullscreen ng-click="isFullscreen06 = !isFullscreen06">
-											<fa name="expand"></fa> Pantalla completa
-										</a>
-									</li>
-
-								</ul>
-
-							</li>
-						</ul>
 					</div>
 					<!-- /tile header -->
 
 					<!-- tile body -->
 					<div class="tile-body">
-						<highchart config="chartConfigReportsByMonth"></highchart>
+						<highchart config="titulo"></highchart>
+					</div>
+					<!-- /tile body -->
+
+				</section>
+				<!-- /tile -->
+			</div>
+
+		</div>
+
+		<div class="row">
+
+			<div class="col-md-12">
+
+				<!-- tile -->
+				<section class="tile" fullscreen="isFullscreen06">
+
+					<!-- tile header -->
+					<div class="tile-header dvd dvd-btm">
+						<h1 class="custom-font">Reportes del mes actual por usuario por semana</h1>
+					</div>
+					<!-- /tile header -->
+
+					<!-- tile body -->
+					<div class="tile-body">
+
+						<table ng-table="tableParamsReportsByWeek" show-filter="true" class="table table-custom" ng-show="$data.length>0">
+							<tr ng-repeat="report in $data">
+								<td data-title="'Semana'" sortable="'name'" filter="{ 'name': 'text' }"  >
+									{{report.name | capitalize:true}}
+								</td>
+								<td data-title="'Cantidad'" sortable="'count'" filter="{ 'count': 'text' }"  >
+									{{report.count}}
+								</td>
+							</tr>
+						</table>
+						<h3 class="text-gray-ps-2 text-center" ng-show="$data.length==0">No se encontraron datos</h3>
 					</div>
 					<!-- /tile body -->
 
@@ -127,48 +141,22 @@
 					<!-- tile header -->
 					<div class="tile-header dvd dvd-btm">
 						<h1 class="custom-font">Reportes del mes actual por usuario</h1>
-						<ul class="controls">
-							<li class="dropdown" dropdown on-toggle="toggled(open)">
-
-								<a href dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
-
-								<ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
-									<li>
-										<a href tile-control-toggle>
-											<span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;Minimizar</span>
-											<span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;Maximizar</span>
-										</a>
-									</li>
-									<li>
-										<a href tile-control-fullscreen ng-click="isFullscreen06 = !isFullscreen06">
-											<fa name="expand"></fa> Pantalla completa
-										</a>
-									</li>
-
-								</ul>
-
-							</li>
-						</ul>
 					</div>
 					<!-- /tile header -->
-
 					<!-- tile body -->
 					<div class="tile-body">
 
-						<table ng-table="tableParamsCurrentMonthReportsByUser" show-filter="true" class="table table-custom" ng-show="show.actual">
+						<table ng-table="tableParamsReportsByUserCurrentMonth" show-filter="true" class="table table-custom" ng-show="$data.length>0">
 							<tr ng-repeat="report in $data">
-								<td data-title="'Usuario'" sortable="'userName'" filter="{ 'userName': 'text' }"  >
-									{{report.userName | capitalize:true}}
+								<td data-title="'Usuario'" sortable="'name'" filter="{ 'name': 'text' }"  >
+									{{report.name | capitalize:true}}
 								</td>
-								<td data-title="'Reportes asignados'" sortable="'numAssignedReports'" filter="{ 'numAssignedReports': 'text' }"  >
-									{{report.numAssignedReports}}
-								</td>
-								<td data-title="'Reportes ejecutados'" sortable="'numExecutedReports'" filter="{ 'numExecutedReports': 'text' }"  >
-									{{report.numExecutedReports}}
+								<td data-title="'Cantidad'" sortable="'count'" filter="{ 'count': 'text' }"  >
+									{{report.count}}
 								</td>
 							</tr>
 						</table>
-						<h3 class="text-gray-ps-2 text-center" ng-show="!show.actual">No se encontraron datos</h3>
+						<h3 class="text-gray-ps-2 text-center" ng-show="$data.length==0">No se encontraron datos</h3>
 					</div>
 					<!-- /tile body -->
 
@@ -187,49 +175,23 @@
 
 					<!-- tile header -->
 					<div class="tile-header dvd dvd-btm">
-						<h1 class="custom-font">Reportes del mes anterior por usuario</h1>
-						<ul class="controls">
-							<li class="dropdown" dropdown on-toggle="toggled(open)">
-
-								<a href dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
-
-								<ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
-									<li>
-										<a href tile-control-toggle>
-											<span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;Minimizar</span>
-											<span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;Maximizar</span>
-										</a>
-									</li>
-									<li>
-										<a href tile-control-fullscreen ng-click="isFullscreen06 = !isFullscreen06">
-											<fa name="expand"></fa> Pantalla completa
-										</a>
-									</li>
-
-								</ul>
-
-							</li>
-						</ul>
+						<h1 class="custom-font">Resultado de entrega del mes actual</h1>
 					</div>
 					<!-- /tile header -->
 
 					<!-- tile body -->
 					<div class="tile-body">
-
-						<table ng-table="tableParamsLastMonthReportsByUser" show-filter="true" class="table table-custom" ng-show="show.anterior">
+						<table ng-table="tableParamsDeliveryReportsCurrentMonth" show-filter="true" class="table table-custom" ng-show="$data.length>0">
 							<tr ng-repeat="report in $data">
-								<td data-title="'Usuario'" sortable="'userName'" filter="{ 'userName': 'text' }"  >
-									{{report.userName | capitalize:true}}
+								<td data-title="'Razon'" sortable="'reason'" filter="{ 'reason': 'text' }"  >
+									{{report.reason | capitalize:true}}
 								</td>
-								<td data-title="'Reportes asignados'" sortable="'numAssignedReports'" filter="{ 'numAssignedReports': 'text' }"  >
-									{{report.numAssignedReports}}
-								</td>
-								<td data-title="'Reportes ejecutados'" sortable="'numExecutedReports'" filter="{ 'numExecutedReports': 'text' }"  >
-									{{report.numExecutedReports}}
+								<td data-title="'Cantidad'" sortable="'num_reports'" filter="{ 'num_reports': 'text' }"  >
+									{{report.num_reports}}
 								</td>
 							</tr>
 						</table>
-						<h3 class="text-gray-ps-2 text-center" ng-show="!show.anterior">No se encontraron datos</h3>
+						<h3 class="text-gray-ps-2 text-center" ng-show="$data.length==0">No se encontraron datos</h3>
 					</div>
 					<!-- /tile body -->
 

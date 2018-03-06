@@ -98,7 +98,7 @@ angular.module('adminProductsApp')
 			$scope.filter[auxiliar].columnName = $scope.columns[i].title;
 			$scope.filter[auxiliar].relationshipName = $scope.columns[i].relationshipName;
 		}
-		$scope.filter.include = 'images,pdfs,state';//_.findWhere(_.findWhere(included, { name: 'Reclamos'}).items, { path: 'echeckit.reports.list'}).included;
+		$scope.filter.include = 'assigned_user,pdfs';//_.findWhere(_.findWhere(included, { name: 'Reportes'}).items, { path: 'echeckit.reports.list'}).included;
 		$scope.filter['page[number]'] = $scope.pagination.pages.current;
 		$scope.filter['page[size]'] = $scope.pagination.pages.size;
 	}
@@ -155,8 +155,6 @@ angular.module('adminProductsApp')
 			reportsIncluded = success.included;
 			$scope.pagination.pages.total = success.meta.page_count;
 
-			//$log.error(success.data);
-
 			for (i = 0; i < success.data.length; i++) {
 				test.push({});
 
@@ -167,15 +165,20 @@ angular.module('adminProductsApp')
 					test[test.length - 1]['id'] 			= success.data[i].id;
 					test[test.length - 1]['negocio'] 		= '';
 
-					if (success.data[i].attributes.dynamic_attributes['60'] != undefined) 
+					/*if (success.data[i].attributes.dynamic_attributes['60'] != undefined) 
 					{
 						test[test.length - 1]['negocio'] 		= success.data[i].attributes.dynamic_attributes['60'].value;
-					}
-
+					}*/
 					//no tiene relacion o es un objeto de consulta directa al dato
-					if (success.data[i].attributes[$scope.columns2[j].field]) {
+					if (success.data[i].attributes[$scope.columns2[j].field]) 
+					{
 						test[test.length - 1][$scope.columns2[j].field_a] = success.data[i].attributes[$scope.columns2[j].field];
 						test[test.length - 1][$scope.columns2[j].name] = success.data[i].attributes[$scope.columns2[j].field];
+					}
+					else if (success.data[i].attributes[$scope.columns2[j].field] === null) 
+					{
+						test[test.length - 1][$scope.columns2[j].field_a] = '-';
+						test[test.length - 1][$scope.columns2[j].name] = '-';
 					} 
 					else
 					{

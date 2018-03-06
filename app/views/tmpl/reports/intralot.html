@@ -48,25 +48,19 @@
 							<thead>
 								<tr>
 									<th ng-repeat="column in columns2" class="text-center sortable" ng-click="sortBy(column.field_a)"> {{column.title}} </th>
-									<th class="text-center"> Asignar </th>
 								</tr>
 								<tr>
 									<th ng-repeat="column in columns2" class="text-center sortable" >
 										<input type="text" class="form-control" ng-model="filter[column.filter].filter"/>
 									</th>
-									<th class="text-center" ></th>
 								</tr>
 							</thead>
 
 							<tbody>
 								<tr ng-repeat="report in $data | filter: filtro">
 									<td ng-repeat="column in columns2">
-										<p data-ng-bind-html="trustAsHtml(report[column.field_a].toString())"></p>
-									</td>
-									<td>
-										<a ng-click="AssignedUser(report.id)" ng-if="report.state ==12 ">Asignar</a>
-										<label ng-if="report.state == 13">Asignado</label>
-										<label ng-if="report.state != 13 && report.state != 12">-</label>
+										<!--{{report[column.field_a]}}-->
+										<p data-ng-bind-html="trustAsHtml(report[column.field_a])"></p>
 									</td>
 								</tr>
 							</tbody>
@@ -87,70 +81,11 @@
 
 		</div>
 		<!-- /row -->
+
+
 	</div>
-
-	<script type="text/ng-template" id="AssignedUser.html">
-		<div class="modal-content">
-			<div class="modal-header ng-scope">
-            	<h3 class="modal-title custom-font" style="text-align: center;">Asignar usuario resolutor</h3>
-        	</div>
-         	<div class="modal-body ng-scope">
-         		<div class="alert alert-{{elements.alert.color}}" ng-show="elements.alert.show"> 
-         			<h4 class="text-md"><strong>{{elements.alert.title}}</strong></h4> {{elements.alert.text}} 
-         		</div>
-         		<div style="text-align: center;">
-         			<form class="form-horizontal form-validation" name="form" novalidate>
-         				<div>
-		         			<label class="ng-binding" style="font-weight: 900;">Departamento:</label> 
-		         			<ui-select class="bg-white b-solid br-15" ng-model="departamentos.selected" close-on-select="true">
-		  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
-		  						<ui-select-choices repeat="depa in departamentos.data" refresh-delay="200">
-		  							<div ng-bind-html="depa.name"></div>
-		  						</ui-select-choices>
-		  					</ui-select>
-		  				</div>
-		  				<div>
-		         			<label class="ng-binding" style="font-weight: 900;">Categorias:</label> 
-		         			<ui-select class="bg-white b-solid br-15" ng-model="categorias.selected" close-on-select="true">
-		  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
-		  						<ui-select-choices repeat="cate in categorias.data" refresh-delay="200">
-		  							<div ng-bind-html="cate.name"></div>
-		  						</ui-select-choices>
-		  					</ui-select>
-		  				</div>
-		  				<div>
-		         			<label class="ng-binding" style="font-weight: 900;">Comentarios:</label> 
-		         			<textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" rows="5" placeholder="Comentario..." ng-model="comentario.value" aria-invalid="false" required></textarea>
-		  				</div>
-		  				<div>
-		         			<label class="ng-binding" style="font-weight: 900;">Fecha de resolución:</label> 
-
-		         			<input type="text" class="form-control rounded" uib-datepicker-popup="{{$filter('capitalize')}}dd/MM/yyyy" ng-model="fecha.value" is-open="fecha.opened" datepicker-options="{ showWeeks: false}" show-button-bar="false" readonly ng-click="openDatePicker($event)" />
-		  				</div>
-
-	         			<div>
-		         			<label class="ng-binding" style="font-weight: 900;">Personal asignado:</label> 
-		         			<ui-select class="bg-white b-solid br-15" ng-model="usuarios.selected" close-on-select="true">
-		  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
-		  						<ui-select-choices repeat="user in usuarios.data" refresh-delay="200">
-		  							<div ng-bind-html="user.name"></div>
-		  						</ui-select-choices>
-		  					</ui-select>
-		  				</div>
-		  				<br>
-		  				<br>
-		  				<br>
-
-		  				<div class="row">
-		  					<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" ng-disabled="form.$invalid" type="button" ng-click="asignarUsuario()" >{{elements.buttons.cambiar.text}}</button>
-		  				</div>
-	         		</form>
-         		</div>
-            </div>
-        </div>
-	</script>
 	<!-- /page content -->
-	<!--script type="text/ng-template" id="modalDownloadPdfsByMonth.html">
+	<script type="text/ng-template" id="modalDownloadPdfsByMonth.html">
 		<div class="modal-header text-center">
 			<h3>Descargar Excel de reportes</h3>
 		</div>
@@ -186,9 +121,9 @@
 			<a class="btn bg-cyan-1-generic btn-rounded-10 mb-10" id="downloadReportsByMonth" ng-href="" ng-click="downloadReports()" ng-disabled="modal.buttons.download.disabled"><i class="fa fa-cloud-download" uib-tooltip="Descargar PDF's"></i> {{modal.buttons.download.text}}</a>
 			<button class="btn btn-cancelRecit btn-rounded-10 mb-10" type="button" ng-click="cancel()">Cerrar</button>
 		</div>
-	</script-->
+	</script>
 
-	<!--script type="text/ng-template" id="modalDownloadPdfs.html">
+	<script type="text/ng-template" id="modalDownloadPdfs.html">
 		<div class="modal-header text-center">
 			<h3>Descargar PDF's</h3>
 			<h4>Seleccione los filtros para buscar los PDF's de reportes y descargar</h4>
@@ -203,6 +138,19 @@
 
 			<div class="row">
 				<div class="col-md-12">
+
+			<!-- // Cliente 
+			// Nombre usuario ejecutor
+			// Clase 
+			// Número de Serie 
+			// Modelo
+			// Elemento de configuración 
+			// ID Alternativo 
+			// Territorio
+			// Tipo de Actividad 
+			// Rango de Fecha de creación 
+			// Rango de Fecha programación 
+			// Rango de Fecha de ejecución  -->
 
 			<style>
 				.multiselect-parent,.dropdown-toggle,.dropdown-menu-form  {
@@ -221,11 +169,13 @@
 					<label class="col-sm-3 control-label">Cliente</label>
 					<div class="col-sm-8">
 						<select class="form-control" ng-options="client.name for client in modal.clients.list track by client.id" ng-model="modal.clients.selected" ng-change="removeMessage()"></select>
+						<!-- <div ng-dropdown-multiselect="" options="modal.clients.list" selected-model="modal.clients.selected" extra-settings="modal.dropdownMultiselect.settings" translation-texts="modal.dropdownMultiselect.texts" events="" ng-dropdown-multiselect-disabled=""></div> -->
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label">Ejecutores</label>
-					<div class="col-sm-8">->
+					<div class="col-sm-8">
+						<!-- <select class="form-control" ng-options="executer.fullName for executer in creatorsUnique track by executer.id" ng-model="executerSelected"></select> -->
 						<div ng-dropdown-multiselect="" options="modal.executers.list" selected-model="modal.executers.selected" extra-settings="modal.dropdownMultiselect.settings" translation-texts="modal.dropdownMultiselect.texts" events="" ng-dropdown-multiselect-disabled=""></div>
 					</div>
 				</div>
@@ -235,10 +185,34 @@
 						<select class="form-control" ng-options="equipmentClass.name for equipmentClass in modal.classes.list track by equipmentClass.id" ng-model="modal.classes.selected" ng-change="removeMessage()"></select>
 					</div>
 				</div>
-				
+				<!-- <div class="form-group">
+					<label class="col-sm-3 control-label">Número de serie equipo</label>
+					<div class="col-sm-8">
+						<select class="form-control" ng-options="equipmentSerialNumber for equipmentSerialNumber in serialNumbersUnique track by $index" ng-model="equipmentSerialNumberSelected"></select>
+					</div>
+				</div> -->
+				<!-- <div class="form-group">
+					<label class="col-sm-3 control-label">Modelo</label>
+					<div class="col-sm-8">
+						<select class="form-control" ng-options="equipmentModel for equipmentModel in modelsUnique track by $index" ng-model="equipmentModalSelected"></select>
+					</div>
+				</div> -->
+				<!-- <div class="form-group">
+					<label class="col-sm-3 control-label">Elemento de configuración</label>
+					<div class="col-sm-8">
+						<select class="form-control" ng-options="equipmentConfigurationElement for equipmentConfigurationElement in configurationElementsUnique track by $index" ng-model="equipmentConfigurationElementSelected"></select>
+					</div>
+				</div> -->
+				<!-- <div class="form-group">
+					<label class="col-sm-3 control-label">ID Alternativo</label>
+					<div class="col-sm-8">
+						<select class="form-control" ng-options="equipmentAlternativeId for equipmentAlternativeId in alternativeIdsUnique track by $index" ng-model="equipmentAlternativeIdSelected"></select>
+					</div>
+				</div> -->
 				<div class="form-group">
 					<label class="col-sm-3 control-label">Territorios</label>
 					<div class="col-sm-8">
+						<!-- <select class="form-control" ng-options="equipmentTerritory for equipmentTerritory in territoriesUnique track by $index" ng-model="equipmentTerritorySelected"></select> -->
 						<div ng-dropdown-multiselect="" options="modal.territories.list" selected-model="modal.territories.selected" extra-settings="modal.dropdownMultiselect.settings" translation-texts="modal.dropdownMultiselect.texts" events="" ng-dropdown-multiselect-disabled=""></div>
 					</div>
 				</div>
@@ -255,11 +229,12 @@
 
 </div>
 
-	<div class="modal-footer">
-		<a class="btn bg-blue-ps btn-rounded-10 mb-10" id="zipBtn" ng-href="" ng-click="downloadZip()" ng-disabled="zipBtnDisabled"><i class="fa fa-cloud-download" uib-tooltip="Descargar PDF's"></i></a>
-		<button class="btn btn-cancelRecit btn-rounded-10 mb-10" type="button" ng-click="cancel()">Cerrar</button>
-	</div>
+<div class="modal-footer">
+	<!-- <button class="btn bg-blue-ps btn-rounded-10 mb-10" type="button" ng-click="downloadZip()"><i class="fa fa-cloud-download"></i></button> -->
+	<a class="btn bg-blue-ps btn-rounded-10 mb-10" id="zipBtn" ng-href="" ng-click="downloadZip()" ng-disabled="zipBtnDisabled"><i class="fa fa-cloud-download" uib-tooltip="Descargar PDF's"></i></a>
+	<button class="btn btn-cancelRecit btn-rounded-10 mb-10" type="button" ng-click="cancel()">Cerrar</button>
+</div>
 
-</script-->
+</script>
 
 </div>

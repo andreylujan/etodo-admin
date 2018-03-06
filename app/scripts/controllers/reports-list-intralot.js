@@ -9,7 +9,7 @@
  */
 angular.module('adminProductsApp')
 
-.controller('ReportsListIddCtrl', function($scope, $log, $filter, $window, $timeout, $uibModal, $sce, NgTableParams, Reports, Utils) {
+.controller('ReportsListIntralotCtrl', function($scope, $log, $filter, $window, $timeout, $uibModal, $sce, NgTableParams, Reports, Utils) {
 
 	$scope.page = {
 		title: 'Lista de Reportes',
@@ -53,7 +53,6 @@ angular.module('adminProductsApp')
 	$scope.columns = _.where(Utils.getInStorage('report_columns'), {visible: true});
 	$scope.filter = {};
 	var included = Utils.getInStorage('menu');
-	//$log.error($scope.columns);
 
 	for (i = 0; i < $scope.columns.length; i++) {
 
@@ -99,7 +98,7 @@ angular.module('adminProductsApp')
 			$scope.filter[auxiliar].columnName = $scope.columns[i].title;
 			$scope.filter[auxiliar].relationshipName = $scope.columns[i].relationshipName;
 		}
-		$scope.filter.include = 'images,pdfs,state';//_.findWhere(_.findWhere(included, { name: 'Reclamos'}).items, { path: 'echeckit.reports.list'}).included;
+		$scope.filter.include = 'images,pdfs,state,assigned_user';//_.findWhere(_.findWhere(included, { name: 'Reportes'}).items, { path: 'echeckit.reports.list'}).included;
 		$scope.filter['page[number]'] = $scope.pagination.pages.current;
 		$scope.filter['page[size]'] = $scope.pagination.pages.size;
 	}
@@ -168,15 +167,20 @@ angular.module('adminProductsApp')
 					test[test.length - 1]['id'] 			= success.data[i].id;
 					test[test.length - 1]['negocio'] 		= '';
 
-					if (success.data[i].attributes.dynamic_attributes['60'] != undefined) 
+					/*if (success.data[i].attributes.dynamic_attributes['60'] != undefined) 
 					{
 						test[test.length - 1]['negocio'] 		= success.data[i].attributes.dynamic_attributes['60'].value;
-					}
-
+					}*/
 					//no tiene relacion o es un objeto de consulta directa al dato
-					if (success.data[i].attributes[$scope.columns2[j].field]) {
+					if (success.data[i].attributes[$scope.columns2[j].field]) 
+					{
 						test[test.length - 1][$scope.columns2[j].field_a] = success.data[i].attributes[$scope.columns2[j].field];
 						test[test.length - 1][$scope.columns2[j].name] = success.data[i].attributes[$scope.columns2[j].field];
+					}
+					else if (success.data[i].attributes[$scope.columns2[j].field] === null) 
+					{
+						test[test.length - 1][$scope.columns2[j].field_a] = '-';
+						test[test.length - 1][$scope.columns2[j].name] = '-';
 					} 
 					else
 					{
@@ -191,58 +195,41 @@ angular.module('adminProductsApp')
 								if (relationships.length == 1) 
 								{
 									for (k = 0; k < success.included.length; k++) {
-										//TRUE = Su relacion tiene un indice de objeto, 
-										//el cual indica el objeto dentro del arreglo de include, 
-										//cual es el indice al cual apuntar
+										//TRUE = Su relacion tiene un indice de objeto, el cual indica el objeto dentro del arreglo de include, cual es el indice al cual apuntar
 										if (_.contains($scope.columns2[j].relationshipName, '[') && _.contains($scope.columns2[j].relationshipName, ']')) 
 										{
 											var indice = $scope.columns2[j].relationshipName.split('[').pop().split(']').shift();
 											var relacion = $scope.columns2[j].relationshipName.substring(0,$scope.columns2[j].relationshipName.lastIndexOf("["));
 
-											if (relacion == 'pdfs') {
-												var ids = _.map(success.data[i].relationships[relacion].data, function(rep){ return rep.id; });
-												var pdfs = _.filter(
-														_.sortBy(
-															_.where(success.included, {type: "pdfs"}), function(num){ return num.attributes.pdf_template_id; }), 
-														function(x) { return x.id == ids[0]  || x.id == ids[1] });
+											if (success.data[i].relationships[relacion].data[indice] != null) 
+											{
 
-												if (pdfs[indice].attributes[$scope.columns2[j].field] != null) 
+												if (success.data[i].relationships[relacion].data[indice].id === success.included[k].id &&
+												success.data[i].relationships[relacion].data[indice].type === success.included[k].type) 
 												{
-													test[test.length - 1][$scope.columns2[j].field_a] = pdfs[indice].attributes[$scope.columns2[j].field];
-												}
-												else
-												{
-													test[test.length - 1][$scope.columns2[j].field_a] = '-';
-												}
-
-											}
-											else {
-												if (success.data[i].relationships[relacion].data[indice] != null) 
-												{
-
-													if (success.data[i].relationships[relacion].data[indice].id === success.included[k].id &&
-													success.data[i].relationships[relacion].data[indice].type === success.included[k].type) 
+													if (success.included[k].attributes[$scope.columns2[j].field] != null) 
 													{
-														if (success.included[k].attributes[$scope.columns2[j].field] != null) 
-														{
-															test[test.length - 1][$scope.columns2[j].field_a] = success.included[k].attributes[$scope.columns2[j].field];
-														}
-														else
-														{
-															test[test.length - 1][$scope.columns2[j].field_a] = '-';
-														}
-														break;
+														test[test.length - 1][$scope.columns2[j].field_a] = success.included[k].attributes[$scope.columns2[j].field];
 													}
-												}
-												else
-												{
-													test[test.length - 1][$scope.columns2[j].field_a] = '-';
+													else
+													{
+														test[test.length - 1][$scope.columns2[j].field_a] = '-';
+													}
 													break;
 												}
+											}
+											else
+											{
+												test[test.length - 1][$scope.columns2[j].field_a] = '-';
+												break;
 											}
 										} 
 										else 
 										{
+											//$log.error(success.data[i].relationships[$scope.columns2[j].relationshipName])
+											//$log.error(success.data[i].relationships)
+											//$log.error($scope.columns2[j])
+											//$log.error($scope.columns2[j].relationshipName)
 											if (success.data[i].relationships[$scope.columns2[j].relationshipName].data != null) 
 											{
 
@@ -251,6 +238,7 @@ angular.module('adminProductsApp')
 												{
 													if (success.included[k].attributes[$scope.columns2[j].field] != null) 
 													{
+														//$log.error(success.included[k].attributes[$scope.columns2[j].field]);
 														test[test.length - 1][$scope.columns2[j].field_a] = success.included[k].attributes[$scope.columns2[j].field];
 													}
 													else
@@ -477,359 +465,19 @@ angular.module('adminProductsApp')
 	};
 
 	$scope.trustAsHtml = function(string) {
-	    return $sce.trustAsHtml(string);
-	};
 
-	$scope.AssignedUser = function(idReport) {
-
-		var modalInstance = $uibModal.open({
-			animation: true,
-			templateUrl: 'AssignedUser.html',
-			controller: 'AssignedUserIddInstance',
-			resolve: {
-				idReport: function() {
-					return idReport;
-				}
-			}
-		});
-
-		modalInstance.result.then(function(datos) {
-			if (datos.action === 'close') {
-				$scope.getReports({
-					success: true,
-					detail: 'OK'
-				}, $scope.pagination.pages.current, $scope.filter);
-			}
-			$scope.tableParams.reload();
-		}, function() {});
-	};
-})
-
-.controller('AssignedUserIddInstance', function($scope, $log, $uibModalInstance, idReport, 
-												Validators, Utils, Reports, Users, Collection) {
-	
-	$scope.report = {
-		id: idReport,
-		attributes: {}
-	},
-	$scope.dynamic_attributes = [];
-
-	$scope.usuarios = {
-		visible: false,
-		data: [],
-		selected: null
-	};
-
-	$scope.departamentos = {
-		visible: false,
-		data: [],
-		selected: null
-	};
-
-	$scope.categorias = {
-		visible: false,
-		data: [],
-		selected: null
-	};
-
-	$scope.comentario = {
-		visible: false,
-		value: ''
-	};
-
-	$scope.fecha =  {
- 		value: new Date(),
-		opened: false,
-		loaded: true
- 	};
-
-
-
-	$scope.elements = {
-		buttons: {
-			cambiar: {
-				text: 'Asignar usuario.',
-				border: 'btn-border',
-				disabled: true
-			}
-		},
-		title: '',
-		alert: {
-			show: false,
-			title: '',
-			text: '',
-			color: '',
+		if (string.toString().includes('<') && string.toString().includes('>')) {
+			return $sce.trustAsHtml(string);
+		} else {
+			return string
 		}
 	};
 
-	var id_collection = '';
+	/*$scope.getReports({
+		success: true,
+		detail: 'OK'
+	}, $scope.pagination.pages.current, $scope.filter);*/
 
-	$scope.getCollection = function(callback) {
-		var data = [];
-		Collection.query({
-			idCollection: id_collection
-		}, function(success) {
-			if (success.data) {
-				data = [];
-				for (var i = 0; i < success.included.length; i++) {
-					data.push({
-						name: success.included[i].attributes.name,
-						id: success.included[i].id,
-					});
-				}
-				callback({success: true, object: data});
-
-			} 
-			else 
-			{
-				callback({success: false, error: "Error al obtener la informacion"});
-			}
-		}, function(error) {
-			callback({success: false, error: "Ocurrio un error"});
-		});
-	};
-	$scope.getUsers = function() {
-		var users = [];
-		Users.query({
-			idUser: ''
-		}, function(success) {
-			if (success.data) {
-				for (var i = 0; i < success.data.length; i++) {
-					if (success.data[i].id != '') 
-					{	
-						users.push({
-							id: success.data[i].id,
-							name: success.data[i].attributes.first_name + ' ' + success.data[i].attributes.last_name,
-							role_id: success.data[i].attributes.role_id
-						});
-					}
-				}
-				$scope.usuarios.data = _.where(users, {role_id: 14});
-				$scope.usuarios.visible = true;
-			} 
-			else 
-			{
-				$log.error(success);
-			}
-		}, function(error) {
-			$log.error(error);
-			if (error.status) {
-				Utils.refreshToken($scope.getUsers);
-			}
-		});
-	};
-
-
-	$scope.asignarUsuario = function() 
-	{
-		$scope.elements.alert.color = '';
- 		$scope.elements.alert.title = '';
- 		$scope.elements.alert.text 	= '';
- 		$scope.elements.alert.show 	= false;
-
-		if (!Validators.validateRequiredField($scope.usuarios.selected.name)) {
-			$scope.elements.alert.color = 'danger';
-			$scope.elements.alert.title = 'Faltan campos por seleccionar';
-			$scope.elements.alert.text 	= 'Debe ingresar un usuario';
-			$scope.elements.alert.show 	= true;
-			Utils.gotoAnyPartOfPage('pageHeader');
-			return;
-		}
-		if (!Validators.validateRequiredField($scope.departamentos.selected.name)) {
-			$scope.elements.alert.color = 'danger';
-			$scope.elements.alert.title = 'Faltan campos por seleccionar';
-			$scope.elements.alert.text 	= 'Debe ingresar un departamento';
-			$scope.elements.alert.show 	= true;
-			Utils.gotoAnyPartOfPage('pageHeader');
-			return;
-		}
-		if (!Validators.validateRequiredField($scope.categorias.selected.name)) {
-			$scope.elements.alert.color = 'danger';
-			$scope.elements.alert.title = 'Faltan campos por seleccionar';
-			$scope.elements.alert.text 	= 'Debe ingresar una categoria';
-			$scope.elements.alert.show 	= true;
-			Utils.gotoAnyPartOfPage('pageHeader');
-			return;
-		}
-		if (!Validators.validateRequiredField($scope.comentario.value)) {
-			$scope.elements.alert.color = 'danger';
-			$scope.elements.alert.title = 'Faltan campos por seleccionar';
-			$scope.elements.alert.text 	= 'Debe ingresar comentarios';
-			$scope.elements.alert.show 	= true;
-			Utils.gotoAnyPartOfPage('pageHeader');
-			return;
-		}
-		if (!Validators.validateRequiredField($scope.fecha.value)) {
-			$scope.elements.alert.color = 'danger';
-			$scope.elements.alert.title = 'Faltan campos por seleccionar';
-			$scope.elements.alert.text 	= 'Debe ingresar la fecha';
-			$scope.elements.alert.show 	= true;
-			Utils.gotoAnyPartOfPage('pageHeader');
-			return;
-		}
-
- 		//LLAMA SERVICIO PARA CERRAR NEGOCIO
- 		$scope.asignarUnUsuario(function (data) {
-	        if(data.success) 
-	        {
-	        	$scope.stateChangeWS(function (datos) {
-			        if(datos.success) 
-			        {
-		            	$uibModalInstance.close({
-							action: 'close',
-							success: data.success
-						});
-		        	}
-		        	else
-		        	{
-		        		$scope.elements.alert.title = datos.error.title;
-						$scope.elements.alert.text 	= datos.error.detail;
-						$scope.elements.alert.color = 'danger';
-						$scope.elements.alert.show 	= true;
-		        	}
-			    })
-        	}
-        	else
-        	{
-        		$scope.elements.alert.title = data.error.title;
-				$scope.elements.alert.text 	= data.error.detail;
-				$scope.elements.alert.color = 'danger';
-				$scope.elements.alert.show 	= true;
-        	}
-	    });
-	};
-
-	$scope.stateChangeWS = function (callback) {
-		var aux = {};
-		aux = 
-		{  
-			data: 
-			{ 
-				type: 'reports', 
-				id: idReport,
-				relationships: 
-				{
-					state: 
-					{
-						data:
-						{
-							type: 'states',
-							id: '13' 
-						}
-					} 
-				} 
-			} , idReport: idReport 
-		};
-
-		Reports.update(aux, 
-			function(success) {
-				callback({success: true});
-			}, function(error) {
-				callback({success: false, error: error.data.errors[0]});
-			}
-		);
-	}
-
-	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
-	$scope.asignarUnUsuario = function (callback) {
-
-		var day = $scope.fecha.value.getDate();
- 		var monthIndex = $scope.fecha.value.getMonth()+1;
-  		var year = $scope.fecha.value.getFullYear();
-
-		$scope.report.attributes.dynamic_attributes['83'] = {
-			id: $scope.departamentos.selected.id,
-			value: $scope.departamentos.selected.name 
-		};
-
-		$scope.report.attributes.dynamic_attributes['84'] = {
-			id: $scope.categorias.selected.id,
-			value: $scope.categorias.selected.name 
-		};
-
-		$scope.report.attributes.dynamic_attributes['85'] = {
-			value: $scope.comentario.value
-		};
-
-		$scope.report.attributes.dynamic_attributes['86'] = {
-			value: day + '/' + monthIndex + '/' + year,
-			time: new Date().getTime()
-		};
-
-		$scope.report.attributes.dynamic_attributes['87'] = {
-			id: $scope.usuarios.selected.id,
-			value: $scope.usuarios.selected.name 
-		};
-
-		var aux = {};
-		aux = 
-		{  
-			data: 
-			{ 
-				type: 'reports', 
-				id: idReport, 
-				attributes: {
-					dynamic_attributes: $scope.report.attributes.dynamic_attributes 
-				}, 
-				relationships: { } 
-			}, 
-			idReport: idReport 
-		};
-
-		Reports.update(aux, 
-			function(success) {
-				callback({success: true});
-			}, function(error) {
-				callback({success: false, error: error.data.errors[0]});
-			}
-		);
-	}
-
-
-	$scope.rellenarCampos = function(callback)
-	{	
-		//departamento
-		id_collection = 32;
-		$scope.getCollection(function (data) {
-		    $scope.departamentos.visible = true;
-		    $scope.departamentos.data = data.object;
-		});
-
-		id_collection = 33;
-		$scope.getCollection(function (data) {
-		    $scope.categorias.visible = true;
-		    $scope.categorias.data = data.object;
-		});
-
-	};
-
-	$scope.getOneReport = function (callback) {
-
-		Reports.query(
-			{idReport: idReport }, 
-			function(success) {
-				callback({success: true, object: success.data});
-			}, function(error) {
-				callback({success: false, error: error.data.errors[0]});
-			}
-		);
-	};
-
-	$scope.getOneReport(function (data) {
-	    $scope.report.attributes = data.object.attributes;
-	    $scope.getUsers();
-	    $scope.rellenarCampos();
-	});
-
-	$scope.openDatePicker = function($event) {
-		$event.preventDefault();
-		$event.stopPropagation();
-		$scope.fecha.opened = !$scope.fecha.opened;
-	};
-
-	$scope.cancel = function() {
-		$uibModalInstance.dismiss('cancel');
-	};
 })
 
 /*.controller('DownloadPdfsByMonthModalInstance', function($scope, $log, $timeout, $moment, $uibModalInstance, Utils, InspectionsByMonth) {

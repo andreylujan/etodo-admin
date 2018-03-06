@@ -167,9 +167,13 @@ angular.module('adminProductsApp')
 					test[test.length - 1]['id'] 			= success.data[i].id;
 					test[test.length - 1]['negocio'] 		= '';
 
-					if (success.data[i].attributes.dynamic_attributes['60'] != undefined) 
+					if (success.data[i].attributes.dynamic_attributes['61'] != undefined) 
 					{
-						test[test.length - 1]['negocio'] 		= success.data[i].attributes.dynamic_attributes['60'].value;
+						test[test.length - 1]['negocio'] = false;
+					}
+					if (success.data[i].attributes.dynamic_attributes['63'] != undefined) 
+					{
+						test[test.length - 1]['negocio'] = true;
 					}
 
 					//if (success.data[i].dynamic_attributes) {}
@@ -877,16 +881,7 @@ angular.module('adminProductsApp')
  		$scope.elements.alert.title = '';
  		$scope.elements.alert.text 	= '';
  		$scope.elements.alert.show 	= false;
- 		$log.error($scope.report.attributes.dynamic_attributes['72'].value);
 
- 		if (!Validators.validateRutCheckDigit($scope.report.attributes.dynamic_attributes['72'].value)) {
-		 	$scope.elements.alert.color = 'danger';
-		 	$scope.elements.alert.title = 'Rut no válido';
-		 	$scope.elements.alert.text 	= 'Debe ingresar un rut con formato 12.345.678-9';
-		 	$scope.elements.alert.show = true;
-		 	Utils.gotoAnyPartOfPage('pageHeader');
-		 	return;
-		}
 		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['64'].value)) {
 			$scope.elements.alert.color = 'danger';
 			$scope.elements.alert.title = 'Faltan campos por completar';
@@ -896,70 +891,16 @@ angular.module('adminProductsApp')
 			return;
 		}
 
-		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['66'].selected.name)) {
+
+		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['74'].value)) {
 			$scope.elements.alert.color = 'danger';
 			$scope.elements.alert.title = 'Faltan campos por completar';
-			$scope.elements.alert.text 	= 'Tipo de constructora';
+			$scope.elements.alert.text 	= 'Comentarios';
 			$scope.elements.alert.show 	= true;
 			Utils.gotoAnyPartOfPage('pageHeader');
 			return;
 		}
 
-		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['65'].selected.name)) {
-			$scope.elements.alert.color = 'danger';
-			$scope.elements.alert.title = 'Faltan campos por completar';
-			$scope.elements.alert.text 	= 'Constructora';
-			$scope.elements.alert.show 	= true;
-			Utils.gotoAnyPartOfPage('pageHeader');
-			return;
-		}
-
-		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['68'].value)) {
-			$scope.elements.alert.color = 'danger';
-			$scope.elements.alert.title = 'Faltan campos por completar';
-			$scope.elements.alert.text 	= 'Persona de contacto';
-			$scope.elements.alert.show 	= true;
-			Utils.gotoAnyPartOfPage('pageHeader');
-			return;
-		}
-
-		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['69'].value)) {
-			$scope.elements.alert.color = 'danger';
-			$scope.elements.alert.title = 'Faltan campos por completar';
-			$scope.elements.alert.text 	= 'Mail de contacto';
-			$scope.elements.alert.show 	= true;
-			Utils.gotoAnyPartOfPage('pageHeader');
-			return;
-		}
-
-		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['70'].value)) {
-			$scope.elements.alert.color = 'danger';
-			$scope.elements.alert.title = 'Faltan campos por completar';
-			$scope.elements.alert.text 	= 'Teléfono de contacto';
-			$scope.elements.alert.show 	= true;
-			Utils.gotoAnyPartOfPage('pageHeader');
-			return;
-		}
-
-		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['71'].value)) {
-			$scope.elements.alert.color = 'danger';
-			$scope.elements.alert.title = 'Faltan campos por completar';
-			$scope.elements.alert.text 	= 'Razón social del cliente';
-			$scope.elements.alert.show 	= true;
-			Utils.gotoAnyPartOfPage('pageHeader');
-			return;
-		}
-
-		if (!Validators.validateRequiredField($scope.report.attributes.dynamic_attributes['72'].value)) {
-			$scope.elements.alert.color = 'danger';
-			$scope.elements.alert.title = 'Faltan campos por completar';
-			$scope.elements.alert.text 	= 'RUT del cliente';
-			$scope.elements.alert.show 	= true;
-			Utils.gotoAnyPartOfPage('pageHeader');
-			return;
-		}
-
- 		//LLAMA SERVICIO PARA CERRAR NEGOCIO
  		$scope.editarReport(function (data) {
 	        if(data.success) 
 	        {
@@ -983,10 +924,15 @@ angular.module('adminProductsApp')
 
 	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
 	$scope.editarReport = function (callback) {
-		$scope.report.attributes.dynamic_attributes['65'] = { id: $scope.report.attributes.dynamic_attributes['65'].selected.id,
+		if ($scope.report.attributes.dynamic_attributes['65'] != undefined && 
+			$scope.report.attributes.dynamic_attributes['66'] != undefined) 
+		{
+
+			$scope.report.attributes.dynamic_attributes['65'] = { id: $scope.report.attributes.dynamic_attributes['65'].selected.id,
 			value: $scope.report.attributes.dynamic_attributes['65'].selected.name };
-		$scope.report.attributes.dynamic_attributes['66'] = { id: $scope.report.attributes.dynamic_attributes['66'].selected.id,
+			$scope.report.attributes.dynamic_attributes['66'] = { id: $scope.report.attributes.dynamic_attributes['66'].selected.id,
 			value: $scope.report.attributes.dynamic_attributes['66'].selected.name };
+		}
 		var aux = {};
 		aux = 
 		{  
@@ -1063,13 +1009,13 @@ angular.module('adminProductsApp')
 	    $scope.report.attributes = data.object.attributes;
 	    $scope.getCollectionTipo();
 	    $scope.getCollectionConstructora();
-	    if ($scope.report.attributes.dynamic_attributes['73'].value == 'true') 
+	    if ($scope.report.attributes.dynamic_attributes['100'].value == 'true') 
 	    {
-	    	$scope.report.attributes.dynamic_attributes['73'].value = true;
+	    	$scope.report.attributes.dynamic_attributes['100'].value = true;
 	    }
 	    else
 	    {
-	    	$scope.report.attributes.dynamic_attributes['73'].value = false;
+	    	$scope.report.attributes.dynamic_attributes['100'].value = false;
 	    }
 	});
 })
@@ -1398,9 +1344,16 @@ angular.module('adminProductsApp')
 
 	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
 	$scope.negocioCerrado = function (callback) {
-		$scope.dynamic_attributes['60'] = { value: $scope.report.cierreNegocio.value };
-		$scope.dynamic_attributes['61'] = { value: $scope.motivoPerdida.selected.name, id: $scope.motivoPerdida.selected.id };
-		$scope.dynamic_attributes['63'] = { value: $scope.report.montoCierre.value };
+		
+		if ($scope.report.cierreNegocio.value) 
+		{
+			$scope.dynamic_attributes['63'] = { value: $scope.report.montoCierre.value };
+		}
+		else
+		{
+			$scope.dynamic_attributes['61'] = { value: $scope.motivoPerdida.selected.name, id: $scope.motivoPerdida.selected.id };
+		}
+
 		$scope.dynamic_attributes['62'] = { value: $scope.report.comentario.value };
 
 		var aux = {};

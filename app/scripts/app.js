@@ -92,8 +92,8 @@ angular
 .config(['$authProvider',
 	function($authProvider) {
 		// Parametros de configuración
-		//$authProvider.loginUrl = 'http://50.16.161.152/efinding/oauth/token'; 	//Produccion
-		$authProvider.loginUrl = 'http://50.16.161.152/efinding-staging/oauth/token'; 	//Desarrollo
+		$authProvider.loginUrl = 'http://50.16.161.152/productos/oauth/token'; 	//Produccion
+		//$authProvider.loginUrl = 'http://50.16.161.152/efinding-staging/oauth/token'; 	//Desarrollo
 		//$authProvider.loginUrl = 'http://localhost:3000/oauth/token'; 					//Local
 		$authProvider.tokenName = 'access_token';
 	}
@@ -214,6 +214,16 @@ angular
 				templateUrl: 'views/tmpl/reports/idd.html',
 				controller: 'ReportsListIddCtrl'
 			})
+			.state('echeckit.reports.inverfact', {
+				url: '/inverfact',
+				templateUrl: 'views/tmpl/reports/list.html',
+				controller: 'ReportsListInverfactCtrl'
+			})
+			.state('echeckit.reports.intralot', {
+				url: '/intralot',
+				templateUrl: 'views/tmpl/reports/intralot.html',
+				controller: 'ReportsListIntralotCtrl'
+			})
 
 		//Tasks
 		.state('echeckit.tasks', {
@@ -234,6 +244,11 @@ angular
 				url: '/carga-manual-pausa',
 				templateUrl: 'views/tmpl/tasks/manual-load-pausa.html',
 				controller: 'ManualLoadPausaCtrl'
+			})
+			.state('echeckit.tasks.manual-load-pausap', {
+				url: '/carga-manual-pausaperu',
+				templateUrl: 'views/tmpl/tasks/manual-load-pausap.html',
+				controller: 'ManualLoadPausaPeruCtrl'
 			})
 			.state('echeckit.tasks.manual-load-demo', {
 				url: '/carga-manual-demo',

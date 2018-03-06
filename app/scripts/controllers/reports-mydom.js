@@ -167,9 +167,13 @@ angular.module('adminProductsApp')
 					test[test.length - 1]['id'] = success.data[i].id;
 					test[test.length - 1]['negocio'] 		= '';
 
-					if (success.data[i].attributes.dynamic_attributes['60'] != undefined) 
+					if (success.data[i].attributes.dynamic_attributes['61'] != undefined) 
 					{
-						test[test.length - 1]['negocio'] 		= success.data[i].attributes.dynamic_attributes['60'].value;
+						test[test.length - 1]['negocio'] = false;
+					}
+					if (success.data[i].attributes.dynamic_attributes['63'] != undefined) 
+					{
+						test[test.length - 1]['negocio'] = true;
 					}
 
 					//no tiene relacion o es un objeto de consulta directa al dato

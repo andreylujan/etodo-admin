@@ -78,7 +78,7 @@ angular.module('adminProductsApp')
 		    	// FIN POR DEPARTAMENTO
 
 		    	// INICIO CHAR DONUT
-		    		$scope.cantidadHallazgosDonut = Utils.setChartConfig(
+		    		$scope.cantidadHallazgosDonut = Utils.setChartConfigIDD(
 						'pie', 
 						500, 
 						{

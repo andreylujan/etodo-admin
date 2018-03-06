@@ -9,7 +9,7 @@
  */
  angular.module('adminProductsApp')
 
- .controller('ManualLoadPausaCtrl', function($scope, $log, $uibModal, $filter, Users, Reports, Utils, Collection, Validators) {
+ .controller('ManualLoadPausaPeruCtrl', function($scope, $log, $uibModal, $filter, Users, Reports, Utils, Collection, Validators) {
 
  	$scope.page = {
  		forms: {},
@@ -88,7 +88,7 @@
 
  	$scope.getCategories = function(filter) {
  		Collection.query({
-			idCollection: 35
+			idCollection: 38
 		}, function(success) {
 			$scope.page.categories = [];
 			if (success.data) {
@@ -124,7 +124,7 @@
 
  	$scope.getLocations = function(filter) {
  		Collection.query({
-			idCollection: 36
+			idCollection: 39
 		}, function(success) {
 			$scope.page.locations = [];
 			if (success.data) {
@@ -257,12 +257,12 @@
  					"limit_date": limitDate,
  					"finished": false,
  					"dynamic_attributes": {
- 						"101": {
+ 						"109": {
  							"value": $scope.page.selectedCategories.serial_number,
  							"id": $scope.page.selectedCategories.id,
  							"editable": isEditable($scope.page.selectedCategories.serial_number)
  						},
- 						"102":{
+ 						"110":{
  							"value": $scope.page.selectedLocations.name_location,
  							"id": $scope.page.selectedLocations.id,
  							"editable": isEditable($scope.page.selectedLocations.name_location)
@@ -275,7 +275,7 @@
  							"value": $scope.page.contador,
  							"editable": isEditable($scope.page.contador)
  						},
- 						"107":{
+ 						"111":{
  							"value": $scope.page.requerimiento,
  							"editable": isEditable($scope.page.requerimiento)
  						},
@@ -284,7 +284,7 @@
  							"editable": isEditable($scope.page.sillon)
  						}
  					},
- 					"state_id": 24
+ 					"state_id": 28
  				},
  				"relationships": {
  					"assigned_user": {
