@@ -9,7 +9,7 @@
 
 set :deploy_to, '/srv/http/www/products/staging/admin'
 
-server '50.16.161.152', port: 60, user: 'ubuntu', roles: [:web, :app, :db]
+server '34.227.102.74', port: 60, user: 'ubuntu', roles: [:web, :app, :db]
 
 set :branch, 'staging'
 
@@ -45,11 +45,11 @@ set :branch, 'staging'
 #
 # Global options
 # --------------
-#  set :ssh_options, {
-#    keys: %w(/home/rlisowski/.ssh/id_rsa),
-#    forward_agent: false,
-#    auth_methods: %w(password)
-#  }
+  set :ssh_options, {
+    keys: '~/.ssh/id_rsa',
+    forward_agent: true,
+    auth_methods: %w(password)
+  }
 #
 # The server-based syntax can be used to override options:
 # ------------------------------------
