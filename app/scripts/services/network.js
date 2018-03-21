@@ -1,11 +1,11 @@
 'use strict';
 
-//var API_URL = 'http://50.16.161.152/productos/api/v1';		//Producción
-//var URL_SERVER = 'http://50.16.161.152/productos/';		//Producción
+var API_URL = 'http://50.16.161.152/productos/api/v1';		//Producción
+var URL_SERVER = 'http://50.16.161.152/productos/';		//Producción
 //var API_URL = 'http://50.16.161.152/efinding-staging/api/v1';		//Desarrollo
 //var URL_SERVER = 'http://50.16.161.152/efinding-staging/';		//Desarrollo
-var API_URL = 'http://192.168.100.13:3000/api/v1';						//Local
-var URL_SERVER = 'http://192.168.100.13:3000/';							//Local
+//var API_URL = 'http://192.168.100.13:3000/api/v1';						//Local
+//var URL_SERVER = 'http://192.168.100.13:3000/';							//Local
 
 angular.module('adminProductsApp')
 
