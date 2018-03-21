@@ -35,6 +35,11 @@
 							<div class="col-md-1">
 								<button class="btn btn-default" ng-click="openModalNewCollectionItem()">Nuevo</button>
 							</div>
+							<div class="col-md-1" ng-if="page.id_collection == 46">
+								<a uib-tooltip="Eliminar agencias" ng-click="openModalDeleteItems()">
+									<button class="bg-red-1-generic pt-7 pb-7 pr-12 pl-12 br-15 b-0 text-white ml-20 mb-10"><i class="fa fa-trash"></i></button>
+								</a>
+							</div>
 							<div class="col-md-1">
 								<a id="downloadExcel" ng-click="getExcel({success:true,detail:'OK'})" uib-tooltip="Descargar Excel">
 									<button class="bg-blue-ps pt-7 pb-7 pr-12 pl-12 br-15 b-0 text-white ml-20 mb-10"><i class="fa fa-cloud-download"></i></button>
@@ -183,6 +188,39 @@
 		</div>
 		<div class="modal-footer">
 			<button class="btn btn-success br-20 pl-20 pr-20" type="submit" ng-click="save()" ng-disabled="modal.btns.chargeSave.disabled || form.$invalid ">Cargar/Guardar</button>
+			<button class="btn btn-default br-20 pl-20 pr-20" type="button" ng-click="cancel()" >Cerrar</button>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="deleteItems.html">
+
+		<div class="overlay br-30" ng-show="modal.overlay.show">
+			<div style="position:absolute;top: 50%;left:50%;transform: translate(-50%, -50%);">
+				<div>
+					<p><strong>Subiendo el archivo...</strong></p>
+					<p class="text-center">
+					<img src="images/loader.gif" alt="loader" class="size-45x45">
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="modal-header text-gray">
+			<h3 class="text-center">Eliminación masiva (csv)</h3>
+		</div>
+
+		<div class="modal-body text-gray">
+		<div class="alert alert-{{modal.alert.color}}" ng-show="modal.alert.show"> <h4 class="text-md"><strong>{{modal.alert.title}}</strong></h4> {{modal.alert.text}} </div>
+			<div class="row">
+				<div class="col-md-12">
+					<form name="form" novalidate>
+						<input name="csvFile" type="file" class="form-control rounded" file-model="modal.csvFile" accept=".xls,.xlsx,.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" ng-model="modal.csvFile" valid-file required>
+					</form>
+				</div>
+			</div>
+			<hr>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-warning br-20 pl-20 pr-20" type="submit" ng-click="save()" ng-disabled="modal.btns.chargeSave.disabled || form.$invalid ">Cargar/Eliminar</button>
 			<button class="btn btn-default br-20 pl-20 pr-20" type="button" ng-click="cancel()" >Cerrar</button>
 		</div>
 	</script>

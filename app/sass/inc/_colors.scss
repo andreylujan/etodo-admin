@@ -33,6 +33,7 @@ $gray-2-generic: #35353F;
 $gray-3-generic: #6F6C73;
 $gray-4-generic: #C3C5C9;
 $cyan-1-generic: #80CDC9;
+$red-1-generic: #ff4a43;
 //darken
 
 $darken-cyan: darken($cyan, 7%);
@@ -65,6 +66,7 @@ $darken-blue-repo-3: darken($blue-repo-3, 5%);
 $darken-orange-repo: darken($orange-repo, 5%);
 
 $darken-cyan-1-generic: darken($cyan-1-generic, 5%);
+$darken-red-1-generic: darken($red-1-generic, 5%);
 
 
 //darker
@@ -99,6 +101,7 @@ $darker-blue-repo-3: darken($blue-repo-3, 9%);
 $darker-orange-repo: darken($orange-repo, 9%);
 
 $darker-cyan-1-generic: darken($cyan-1-generic, 9%);
+$darker-red-1-generic: darken($red-1-generic, 9%);
 
 //darkest
 
@@ -132,6 +135,7 @@ $darkest-blue-repo-3: darken($blue-repo-3, 12%);
 $darkest-orange-repo: darken($orange-repo, 12%);
 
 $darkest-cyan-1-generic: darken($cyan-1-generic, 12%);
+$darkest-red-1-generic: darken($red-1-generic, 12%);
 
 
 

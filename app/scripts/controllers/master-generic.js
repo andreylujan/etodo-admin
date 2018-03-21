@@ -12,7 +12,8 @@ angular.module('adminProductsApp')
 .controller('MastersEcheckitGenericCtrl', function($scope, $log, $timeout, $state, $uibModal, NgTableParams, $filter, Utils, Collection, ExcelCollection) {
 
 	$scope.page = {
-		title: ''
+		title: '',
+		id_collection: 0
 	};
 	var data = [];
 
@@ -28,6 +29,7 @@ angular.module('adminProductsApp')
 		}, function(success) {
 			if (success.data) {
 				$scope.page.title = success.data.attributes.name;
+				$scope.page.id_collection = $state.params.type;
 				data = [];
 				for (var i = 0; i < success.included.length; i++) {
 					data.push({
@@ -145,6 +147,28 @@ angular.module('adminProductsApp')
 		}, function() {});
 	};
 
+	$scope.openModalDeleteItems = function() {
+
+		var modalInstance = $uibModal.open({
+			animation: true,
+			backdrop: false,
+			templateUrl: 'deleteItems.html',
+			controller: 'deleteItems',
+			resolve: {
+				idCollection: function() {
+					return id_collection;
+				},
+				nameCollection: function() {
+					return $scope.page.title;
+				}
+			}
+		});
+
+		modalInstance.result.then(function() {
+			$scope.getCollection();
+		}, function() {});
+	};
+
 	$scope.getExcel = function() 
 	{
 		ExcelCollection.getFile('#downloadExcel', id_collection, $scope.page.title);
@@ -154,6 +178,98 @@ angular.module('adminProductsApp')
 
 
 	$scope.getCollection();
+
+})
+
+.controller('deleteItems', function($scope, $log, $uibModalInstance, $uibModal, CsvDelete, idCollection, nameCollection) {
+	$scope.modal = {
+		csvFile: null,
+		btns: {
+			chargeSave: {
+				disabled: false
+			}
+		},
+		overlay: {
+			show: false
+		},
+		alert: {
+			color: '',
+			show: false,
+			title: '',
+			subtitle: '',
+			text: ''
+		}
+	};
+
+	$scope.save = function() {
+
+		$scope.modal.btns.chargeSave.disabled = true;
+
+		if ($scope.modal.csvFile) {
+			uploadCsv();
+		} else {
+
+		}
+
+	};
+
+	var uploadCsv = function() {
+
+		var form = [{
+			field: 'type',
+			value: 'collections',
+			id: idCollection
+		}, {
+			field: 'csv',
+			value: $scope.modal.csvFile
+		}];
+
+		$scope.modal.overlay.show = true;
+
+		CsvDelete.upload(form)
+			.success(function(success) {
+				$scope.modal.overlay.show = false;
+				$uibModalInstance.close();
+				openModalSummary(success, nameCollection);
+			}).error(function(error) {
+				$log.error(error);
+				$scope.modal.overlay.show = false;
+				$scope.modal.alert.show = true;
+				$scope.modal.alert.title = 'Error '+error.errors[0].status;
+				$scope.modal.alert.text = error.errors[0].detail;
+				$scope.modal.alert.color = 'danger';
+			});
+
+	};
+
+	var openModalSummary = function(data) {
+		var modalInstance = $uibModal.open({
+			animation: true,
+			templateUrl: 'summary.html',
+			controller: 'SummaryGenericLoadModalInstance',
+			resolve: {
+				data: function() {
+					return data;
+				},
+				nameCollection: function() {
+					return nameCollection;
+				}
+			}
+		});
+
+		modalInstance.result.then(function() {}, function() {
+			// $scope.getUsers();
+		});
+	};
+
+	$scope.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+
+	$scope.ok = function() {
+		$uibModalInstance.close();
+	};
+
 
 })
 

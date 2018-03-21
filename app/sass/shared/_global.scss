@@ -663,6 +663,19 @@ body {
   }
 }
 
+.bg-red-1-generic {
+  background-color: $red-1-generic!important;
+  color: white!important;
+  
+  &.dk {
+    background-color: $darken-red-1-generic!important;
+  }
+
+  &.dker {
+    background-color: $darker-red-1-generic!important;
+  }
+}
+
 .no-bg {
   background-color: transparent!important;
 }

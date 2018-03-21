@@ -1534,6 +1534,23 @@ button {
     }
   }
 
+   &.btn-red-1-generic {
+    background-color: $red-1-generic;
+    color: white;
+    border-color: $darken-red-1-generic;
+
+    &:hover,&:active,&.active {
+      background-color: $darken-red-1-generic;
+      border-color: $darker-red-1-generic;
+      color: white;
+    }
+
+    &:active,&.active {
+      background-color: $darker-red-1-generic;
+      border-color: $darkest-red-1-generic;
+    }
+  }
+
   &.btn-border {
     background-color: transparent;
     border-width: 2px;

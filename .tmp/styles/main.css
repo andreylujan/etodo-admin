@@ -4998,6 +4998,17 @@ button:focus {
     .btn.btn-cyan-1-generic:active, .btn.btn-cyan-1-generic.active {
       background-color: #5fc0bb;
       border-color: #54bcb6; }
+  .btn.btn-red-1-generic {
+    background-color: #ff4a43;
+    color: white;
+    border-color: #ff312a; }
+    .btn.btn-red-1-generic:hover, .btn.btn-red-1-generic:active, .btn.btn-red-1-generic.active {
+      background-color: #ff312a;
+      border-color: #ff1e15;
+      color: white; }
+    .btn.btn-red-1-generic:active, .btn.btn-red-1-generic.active {
+      background-color: #ff1e15;
+      border-color: #ff0f06; }
   .btn.btn-border {
     background-color: transparent;
     border-width: 2px;
@@ -9230,6 +9241,14 @@ body {
     background-color: #a5dbd9 !important; }
   .bg-cyan-1-generic.bright {
     background-color: white !important; }
+
+.bg-red-1-generic {
+  background-color: #ff4a43 !important;
+  color: white !important; }
+  .bg-red-1-generic.dk {
+    background-color: #ff312a !important; }
+  .bg-red-1-generic.dker {
+    background-color: #ff1e15 !important; }
 
 .no-bg {
   background-color: transparent !important; }

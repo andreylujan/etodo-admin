@@ -1,11 +1,11 @@
 'use strict';
 
-var API_URL = 'http://50.16.161.152/productos/api/v1';		//Producción
-var URL_SERVER = 'http://50.16.161.152/productos/';		//Producción
+//var API_URL = 'http://50.16.161.152/productos/api/v1';		//Producción
+//var URL_SERVER = 'http://50.16.161.152/productos/';		//Producción
 //var API_URL = 'http://50.16.161.152/efinding-staging/api/v1';		//Desarrollo
 //var URL_SERVER = 'http://50.16.161.152/efinding-staging/';		//Desarrollo
-//var API_URL = 'http://localhost:3000/api/v1';						//Local
-//var URL_SERVER = 'http://localhost:3000/';							//Local
+var API_URL = 'http://192.168.100.13:3000/api/v1';						//Local
+var URL_SERVER = 'http://192.168.100.13:3000/';							//Local
 
 angular.module('adminProductsApp')
 
@@ -564,6 +564,27 @@ angular.module('adminProductsApp')
 			var downloadLink = angular.element(elem);
 			downloadLink.attr('href', API_URL + '/collections/' + idCollection + '.csv?access_token=' + $auth.getToken());
 			downloadLink.attr('download', fileName + '.csv');
+		}
+	};
+
+})
+
+//DELETE
+.service('CsvDelete', function($resource, $http, $log) {
+	var fd = new FormData();
+	return {
+		upload: function(form) {
+
+			for (var i = 0; i < form.length; i++) {
+				fd.append(form[i].field, form[i].value);
+			}
+
+			return $http.put(API_URL + '/collections/' + form[0].id + '.csv?delete=true', fd, {
+				transformRequest: angular.identity,
+				headers: {
+					'Content-Type': undefined
+				}
+			});
 		}
 	};
 
