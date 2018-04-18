@@ -94,7 +94,7 @@ angular
 		// Parametros de configuración
 		$authProvider.loginUrl = 'http://50.16.161.152/productos/oauth/token'; 	//Produccion
 		//$authProvider.loginUrl = 'http://50.16.161.152/efinding-staging/oauth/token'; 	//Desarrollo
-		//$authProvider.loginUrl = 'http://192.168.100.13:3000//oauth/token'; 					//Local
+		//$authProvider.loginUrl = 'http://192.168.100.28:3000//oauth/token'; 					//Local
 		$authProvider.tokenName = 'access_token';
 	}
 ])

@@ -12,7 +12,8 @@ angular.module('adminProductsApp')
 .controller('UsersListCtrl', function($scope, $log, $filter, $window, $uibModal, NgTableParams, Users, Invitations, Utils) {
 
 	$scope.page = {
-		title: 'Lista de usuarios'
+		title: 'Lista de usuarios',
+		organization: Utils.getInStorage('organization')
 	};
 
 	var data = [];

@@ -70,6 +70,11 @@ angular.module('adminProductsApp')
 									$scope.elements.msg.text = 'Error al cargar datos de usuario, vuelva a logear';
 									$scope.elements.msg.show = true;
 								}
+								else if (error.detail === 'DOM')
+								{
+									$scope.elements.msg.text = 'El usuario ingresado no esta autorizado para entrar al administrador';
+									$scope.elements.msg.show = true;
+								}
 								else {
 									$scope.elements.msg.text = error.detail.data.errors[0].detail;
 									$scope.elements.msg.show = true;
@@ -84,7 +89,6 @@ angular.module('adminProductsApp')
 				}
 			})
 			.catch(function(error) {
-				$log.error(error);
 				if (error.status === 401) 
 				{
 					$scope.elements.msg.text = 'Usuario y/o contraseña invalida. Intente nuevamente';
@@ -102,12 +106,23 @@ angular.module('adminProductsApp')
 		var promise = defered.promise;
 		var user = {};
 
+		const loginDom = [
+			'jdominguez@dom.cl',
+			'rosario.dominguez@dom.cl',
+			'mariant.davila@dom.cl',
+			'dom@bildchile.com',
+			'lagos.jara.a+dom@gmail.com',
+			'laura.guanco+dom@gmail.com',
+			'pruebas.bild+dom@gmail.com'
+		]
+
 		Users.query({
 			idUser: idUser,
 			include: 'role.organization'
 		}, function(success) {
 			$log.log(success);
 
+			var organization = 0;
 			user.fullName = success.data.attributes.full_name;
 			user.image = success.data.attributes.image;
 			user.type = success.data.type;
@@ -115,10 +130,21 @@ angular.module('adminProductsApp')
 			for (var i = 0; i < success.included.length; i++) {
 				if (success.included[i].type === 'organizations') 
 				{
+					organization = success.included[i].id;
 					Utils.setInStorage('organization', success.included[i].id);
 					Utils.setInStorage('adminPath', success.included[i].attributes.default_admin_path);
 					Utils.setInStorage('organization_name', success.included[i].attributes.name);
 				}
+			}
+
+			if (organization === '5') {
+				if (_.find(loginDom, function(mail){ return mail === $scope.page.user.username; }) === undefined) {
+					defered.reject({
+						success: false,
+						detail: 'DOM',
+						data: ''
+					});
+				} 
 			}
 
 			defered.resolve({
