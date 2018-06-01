@@ -1,0 +1,119 @@
+<div class="page" ng-controller="DomDashboardCtrl as vm">
+    <div class="pageheader">
+        <h2>{{page.title}} <span></span></h2>
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a ui-sref="{{main.url}}"> {{main.title}}</a>
+                </li>
+                <li>
+                    <a href="javascript:;">Reportes</a>
+                </li>
+                <li>
+                    <a ui-sref="app.playStation.reports">{{page.title}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Filtros -->
+        <div class="col-md-3 mt-5">
+            <ui-select class="gray-ps-1 br-15 b-0" ng-model="page.filters.constructions.selected" close-on-select="true" ng-disabled="page.filters.constructions.disabled" ng-change="getDashboardInfo({success:true,detail:'OK'})" title="Construcciones">
+                <ui-select-match placeholder="Seleccionar construccion..."><span ng-bind="$select.selected.name | capitalize:true"></span></ui-select-match>
+                <ui-select-choices repeat="const in page.filters.constructions.list | propsFilter: {name: $select.search}">
+                    <div ng-bind-html="const.name | highlight: $select.search | capitalize:true"></div>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-3 mt-5">
+            <ui-select class="gray-ps-1 br-15 b-0" ng-model="page.filters.users.selected" close-on-select="true" ng-disabled="page.filters.users.disabled" ng-change="getDashboardInfo({success:true,detail:'OK'})" title="Supervisores">
+                <ui-select-match placeholder="Seleccionar supervisor..."><span ng-bind="$select.selected.name | capitalize:true"></span></ui-select-match>
+                <ui-select-choices repeat="user in page.filters.users.list | propsFilter: {name: $select.search}">
+                    <div ng-bind-html="user.name | highlight: $select.search | capitalize:true"></div>
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="col-md-3 mt-5">
+            <p class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup="MM/yyyy" ng-model="page.filters.dateSearch.value" is-open="asd" datepicker-options="{minMode: 'month', showButtonBar: false}"  ng-change="getDashboardInfo({success: true,detail: 'OK'})"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="asd = !asd"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </p>
+        </div>
+
+    </div>
+    <div class="pagecontent">
+        <!-- MAPA -->
+        <div class="row">
+            <div class="col-md-12">
+                <section class="tile" fullscreen="isFullscreen06">
+                    <div class="tile-header dvd dvd-btm">
+                        <h1 class="custom-font">Localizacion de oportunidades de negocio</h1>
+                    </div>
+                    <div class="col-md-12">
+                        <ng-map zoom="{{map.zoom}}" 
+                                center="{{map.center.latitude}}, {{map.center.longitude}}" 
+                                style="height:642px">   
+                            
+                            <custom-marker ng-repeat="report in map.reports" 
+                                            id="{{report.id}}" 
+                                            position="{{report.position}}" 
+                                            on-click="vm.showDetail(report)">
+                                <div>
+                                    <img src="https://s3-sa-east-1.amazonaws.com/efinding/icons/marker1.png" />
+                                </div>
+                            </custom-marker>
+                            <info-window id="foo-iw">
+                                <div ng-non-bindable="" style="color: {{report.color}}">
+                                  <strong>{{report.id}}</strong>
+                                </div>
+                              </info-window>
+                       </ng-map>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <br>
+
+        <!-- Grafico Causa Perdida -->
+        <div class="row">
+            <div class="col-md-12">
+                <section class="tile" fullscreen="isFullscreen06">
+                    <div class="tile-header dvd dvd-btm">
+                        <h1 class="custom-font">Causa de perdida de negocio</h1>
+                    </div>
+                    <div class="tile-body">
+                        <highchart config="reportsByReason"></highchart>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Grafico negocio cerrado - tareas ingresadas -->
+        <div class="row">
+            <div class="col-md-6">
+                <section class="tile" fullscreen="isFullscreen06">
+                    <div class="tile-header dvd dvd-btm">
+                        <h1 class="custom-font">Negocios cerrados</h1>
+                    </div>
+                    <div class="tile-body">
+                        <highchart config="reportsByBusiness"></highchart>
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-6">
+                <section class="tile" fullscreen="isFullscreen06">
+                    <div class="tile-header dvd dvd-btm">
+                        <h1 class="custom-font">Tareas ingresadas</h1>
+                    </div>
+                    <div class="tile-body">
+                        <highchart config="reportsByStates"></highchart>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+</div>
