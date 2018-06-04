@@ -204,4 +204,40 @@ angular.module('adminProductsApp')
 			series: series
 		};
 	};
+
+
+	this.setChartConfigDOM = function(type, height, plotOptions, yAxisData, xAxisData, series, colors) {
+		
+		var colores = colors;
+		return {
+			options: {
+				title: {
+					text: null
+				},
+				navigation: {
+					buttonOptions: {
+						enabled: true
+					}
+				},
+				colors: colores,
+				tooltip: {
+					style: {
+						padding: 10,
+						fontWeight: 'bold'
+					}
+				},
+				chart: {
+					type: type,
+					height: height
+				},
+				plotOptions: plotOptions,
+				credits: {
+					enabled: false
+				}
+			},
+			yAxis: yAxisData,
+			xAxis: xAxisData,
+			series: series
+		};
+	};
 });

@@ -130,8 +130,6 @@ angular.module('adminProductsApp').controller('DomDashboardCtrl', function($scop
  					}; 
  				});
 
- 				console.error(success.data.attributes);
-
  				$scope.reportsByReason = Utils.setChartConfig(
 					'column', 
 					null, 
@@ -149,10 +147,22 @@ angular.module('adminProductsApp').controller('DomDashboardCtrl', function($scop
 				        type: 'column',
 				        name: 'Negocios perdidos',
 				        data: _.map(success.data.attributes.by_reason, function(r){ return r.num_reports })
-				    }]
+				    }],
+				    ['#405B72']
 	    		);
 
-	    		$scope.reportsByBusiness = Utils.setChartConfig(
+	    		var colorsBybusiness = []
+
+	    		angular.forEach(success.data.attributes.by_business, function(value, key) {
+					if (value.name == 'Ganado') {
+						colorsBybusiness.push('#228B22');
+					}
+					else if(value.name == 'Perdido'){
+						colorsBybusiness.push('#FF0000');
+					}
+	    		});
+
+	    		$scope.reportsByBusiness = Utils.setChartConfigDOM(
 					'pie', 
 					200, 
 					{
@@ -176,10 +186,28 @@ angular.module('adminProductsApp').controller('DomDashboardCtrl', function($scop
 					        	y: r.num_reports
 					        } })
 				    	}
-				    ]
+				    ],
+				    colorsBybusiness
 				);
+				var colors = [];
 
-				$scope.reportsByStates = Utils.setChartConfig(
+				angular.forEach(success.data.attributes.by_state, function(value, key) {
+					if (value.state == 'Ingreso de actividades') {
+						colors.push('#228B22');
+					}
+					else if (value.state == 'Entrega de propuestas') {
+						colors.push('#FFD700');
+					}
+					else if (value.state == 'Cierre de negocio') {
+						colors.push('#FF0000');
+					}
+					else if (value.state == 'Finalizado') {
+						colors.push('#405B72');
+					}
+
+	    		});
+
+				$scope.reportsByStates = Utils.setChartConfigDOM(
 					'pie', 
 					200, 
 					{
@@ -203,7 +231,8 @@ angular.module('adminProductsApp').controller('DomDashboardCtrl', function($scop
 					        	y: r.num_reports
 					        } })
 				    	}
-				    ]
+				    ],
+				    colors
 				);
 
 

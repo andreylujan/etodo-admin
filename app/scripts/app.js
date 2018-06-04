@@ -94,7 +94,7 @@ angular
 		// Parametros de configuración
 		$authProvider.loginUrl = 'http://50.16.161.152/productos/oauth/token'; 	//Produccion
 		//$authProvider.loginUrl = 'http://50.16.161.152/efinding-staging/oauth/token'; 	//Desarrollo
-		//$authProvider.loginUrl = 'http://192.168.100.28:3000//oauth/token'; 					//Local
+		//$authProvider.loginUrl = 'http://192.168.100.3:3000//oauth/token'; 					//Local
 		$authProvider.tokenName = 'access_token';
 	}
 ])
@@ -155,6 +155,10 @@ angular
 				url: '/idd',
 				templateUrl: 'views/tmpl/dashboard/idd.html',
 				controller: 'IDDDashboardCtrl'
+			})
+			.state('echeckit.dashboard.dom', {
+				url: '/dom',
+				templateUrl: 'views/tmpl/dashboard/dom.html'
 			})
 			.state('echeckit.dashboard.inverfact', {
 				url: '/inverfact',
