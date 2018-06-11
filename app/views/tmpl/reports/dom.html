@@ -249,8 +249,8 @@
 		         			<label class="ng-binding" style="font-weight: 900;">Usuario:</label> 
 		         			<ui-select class="bg-white b-solid br-15" ng-model="usuarios.selected" close-on-select="true">
 		  						<ui-select-match placeholder="Buscar..." class="unstyled-placeholder">{{$select.selected.name}}</ui-select-match>
-		  						<ui-select-choices repeat="user in usuarios.data" refresh-delay="200">
-		  							<div ng-bind-html="user.name"></div>
+		  						<ui-select-choices repeat="user in usuarios.data | propsFilter: {name: $select.search}" refresh-delay="200">
+		  							<div ng-bind-html="user.name | highlight: $select.search | capitalize:true"></div>
 		  						</ui-select-choices>
 		  					</ui-select>
 		  				</div>

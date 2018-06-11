@@ -831,6 +831,14 @@ angular.module('adminProductsApp')
 			idCollection: 27
 		}, function(success) {
 			if (success.data) {
+				if ($scope.report.attributes.dynamic_attributes['65'].is_other) {
+					success.included.push({
+						id: 'id_de_mentira',
+						attributes: {
+							name: $scope.report.attributes.dynamic_attributes['65'].value
+						}
+					});
+				}
 				for (var i = 0; i < success.included.length; i++) {
 					$scope.constructora.data.push({
 						name: success.included[i].attributes.name,
@@ -842,7 +850,8 @@ angular.module('adminProductsApp')
 						if ($scope.report.attributes.dynamic_attributes['65'].value == success.included[i].attributes.name) 
 						{
 							$scope.report.attributes.dynamic_attributes['65'].selected = {id: success.included[i].id, 
-								name: success.included[i].attributes.name};
+								name: success.included[i].attributes.name
+							};
 						}
 					}
 				}
@@ -928,10 +937,22 @@ angular.module('adminProductsApp')
 			$scope.report.attributes.dynamic_attributes['66'] != undefined) 
 		{
 
-			$scope.report.attributes.dynamic_attributes['65'] = { id: $scope.report.attributes.dynamic_attributes['65'].selected.id,
-			value: $scope.report.attributes.dynamic_attributes['65'].selected.name };
-			$scope.report.attributes.dynamic_attributes['66'] = { id: $scope.report.attributes.dynamic_attributes['66'].selected.id,
-			value: $scope.report.attributes.dynamic_attributes['66'].selected.name };
+			if ($scope.report.attributes.dynamic_attributes['65'].is_other) {
+				$scope.report.attributes.dynamic_attributes['65'] = { 
+					is_other: true,
+					value: $scope.report.attributes.dynamic_attributes['65'].selected.name 
+				};
+			} else {
+				$scope.report.attributes.dynamic_attributes['65'] = { 
+					id: $scope.report.attributes.dynamic_attributes['65'].selected.id,
+					value: $scope.report.attributes.dynamic_attributes['65'].selected.name 
+				};
+			}
+
+			$scope.report.attributes.dynamic_attributes['66'] = { 
+				id: $scope.report.attributes.dynamic_attributes['66'].selected.id,
+				value: $scope.report.attributes.dynamic_attributes['66'].selected.name 
+			};
 		}
 		var aux = {};
 		aux = 
