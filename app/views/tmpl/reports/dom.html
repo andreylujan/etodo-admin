@@ -319,9 +319,29 @@
 	         			<br>
 
 	         			<br>
-	     
+	     				<button class="btn btn-red br-20 text-md pl-20 pr-20" type="button" ng-click="changeState()">{{elements.buttons.change.text}}</button>
 	         			<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" type="button" ng-click="updateReport()" >{{elements.buttons.agregar.text}}</button>
 					</form>
+         		</div>
+            </div>
+        </div>
+	</script>
+
+	<script type="text/ng-template" id="changeStateAlert.html">
+		<div class="modal-content">
+			<div class="modal-header ng-scope">
+            	<h3 class="modal-title custom-font" style="text-align: center;">Cambiar Estado</h3>
+        	</div>
+         	<div class="modal-body ng-scope">
+         		<div class="alert alert-{{elements.alert.color}}" ng-show="elements.alert.show"> 
+         			<h4 class="text-md"><strong>{{elements.alert.title}}</strong></h4> {{elements.alert.text}} 
+         		</div>
+         		<div style="text-align: center;">
+         			<form class="form-horizontal form-validation" name="form" novalidate>
+	         			<h4>Al cambiar estado a Entrega de Propuesta no podrá volver a ingresar datos en este estado</h4>
+	         			<br>
+	         			<button class="btn btn-green-ps br-20 text-md pl-20 pr-20" type="button" ng-click="changeState()" >{{elements.buttons.cambiar.text}}</button>
+	         		</form>
          		</div>
             </div>
         </div>

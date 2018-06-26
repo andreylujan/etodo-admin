@@ -469,6 +469,26 @@ angular.module('adminProductsApp')
 					success: true,
 					detail: 'OK'
 				}, $scope.pagination.pages.current, $scope.filter);
+			} else if (datos.action === 'new') {
+				var modalChange = $uibModal.open({
+					animation: true,
+					templateUrl: 'changeStateAlert.html',
+					controller: 'changeStateAlert',
+					resolve: {
+						idReport: function() {
+							return idReport;
+						}
+					}
+				});
+				modalChange.result.then(function(datos) {
+					if (datos.action === 'close') {
+						$scope.getReports({
+							success: true,
+							detail: 'OK'
+						}, $scope.pagination.pages.current, $scope.filter);
+					}
+					$scope.tableParams.reload();
+				}, function() {});
 			}
 			$scope.tableParams.reload();
 		}, function() {});
@@ -520,6 +540,83 @@ angular.module('adminProductsApp')
 		}, function() {});
 	};
 
+})
+
+.controller('changeStateAlert', function($scope, $log, $uibModalInstance, idReport, Validators, Utils, Reports, Users) {
+	
+	$scope.report = {
+		id: idReport,
+		attributes: {}
+	},
+
+	$scope.elements = {
+		buttons: {
+			cambiar: {
+				text: 'Cambiar estado',
+				border: 'btn-border',
+				disabled: true
+			}
+		},
+		title: '',
+		alert: {
+			show: false,
+			title: '',
+			text: '',
+			color: '',
+		}
+	};
+
+	var selected = '';
+
+	$scope.changeState = function() {
+ 		$scope.changeStateWS(function (data) {
+	        if(data.success) 
+	        {
+            	$uibModalInstance.close({
+					action: 'close',
+					success: data.success
+				});
+        	}
+        	else
+        	{
+        		$scope.elements.alert.title = data.error.title;
+				$scope.elements.alert.text 	= data.error.detail;
+				$scope.elements.alert.color = 'danger';
+				$scope.elements.alert.show 	= true;
+        	}
+	    });
+	};
+
+	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
+	$scope.changeStateWS = function (callback) {
+		var data = {};
+		data = 
+		{  
+			data: 
+			{ 
+				type: 'reports', 
+				id: idReport,
+				relationships: 
+				{
+					state: 
+					{
+						data:
+						{
+							type: 'states',
+							id: '8' 
+						}
+					} 
+				} 
+			} , idReport: idReport 
+		};
+		Reports.update(data, 
+			function(success) {
+				callback({success: true});
+			}, function(error) {
+				callback({success: false, error: error.data.errors[0]});
+			}
+		);
+	}
 })
 
 .controller('AgregarPropuestaInstance', function($scope, $log, $uibModalInstance, idReport, idState, Validators, Utils, Reports) {
@@ -780,7 +877,12 @@ angular.module('adminProductsApp')
 	$scope.elements = {
 		buttons: {
 			agregar: {
-				text: 'Guardar reporte.',
+				text: 'Guardar reporte',
+				border: 'btn-border',
+				disabled: true
+			},
+			change: {
+				text: 'Cambiar estado',
 				border: 'btn-border',
 				disabled: true
 			}
@@ -880,12 +982,9 @@ angular.module('adminProductsApp')
 		 	$scope.elements.alert.text 	= '';
 		 	$scope.elements.alert.show = true;
 		}
-
 	};
 
-
-	$scope.updateReport = function() 
-	{
+	$scope.updateReport = function() {
 		$scope.elements.alert.color = '';
  		$scope.elements.alert.title = '';
  		$scope.elements.alert.text 	= '';
@@ -927,9 +1026,13 @@ angular.module('adminProductsApp')
 				Utils.gotoAnyPartOfPage('pageHeader');
         	}
 	    });
-
-
 	};
+
+	$scope.changeState = function() {
+		$uibModalInstance.close({
+			action: 'new'
+		});
+	}
 
 	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
 	$scope.editarReport = function (callback) {
@@ -980,7 +1083,7 @@ angular.module('adminProductsApp')
 		);
 	}
 
-	$scope.stateChangeWS = function (callback) {
+	/*$scope.stateChangeWS = function (callback) {
 		var aux = {};
 		aux = 
 		{  
@@ -1009,7 +1112,7 @@ angular.module('adminProductsApp')
 				callback({success: false, error: error.data.errors[0]});
 			}
 		);
-	}
+	}*/
 
 	//LLAMA AL SERVICIO PARA AGREGAR UNA PROPUESTA
 	$scope.getOneReport = function (callback) {
@@ -1058,7 +1161,7 @@ angular.module('adminProductsApp')
 	$scope.elements = {
 		buttons: {
 			cambiar: {
-				text: 'Asignar usuario.',
+				text: 'Asignar usuario',
 				border: 'btn-border',
 				disabled: true
 			}
@@ -1420,7 +1523,6 @@ angular.module('adminProductsApp')
 	$scope.getOneReport(function (data) {
 	    $scope.dynamic_attributes = data.object.attributes.dynamic_attributes;
 	});
-
 })
 
 .controller('DownloadPdfsByMonthModalInstance', function($scope, $log, $timeout, $moment, $uibModalInstance, Utils, ReportsByMonth) {
@@ -1473,7 +1575,6 @@ angular.module('adminProductsApp')
 			$scope.modal.buttons.download.text = '';
 		}, 3500);
 	};
-
 })
 
 .controller('DownloadPdfsModalInstance', function($scope, $log, $timeout, $moment, $uibModalInstance, Equipments, Reports, Utils, GetPdfsZip) {
@@ -1869,5 +1970,4 @@ angular.module('adminProductsApp')
 		success: true,
 		detail: 'OK'
 	});
-
 });
