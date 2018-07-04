@@ -66,8 +66,7 @@ angular.module('adminProductsApp')
 				$scope.filter['filter[' + $scope.columns[i].relationshipName + ']' + '[' + $scope.columns[i].field + ']'].columnName = $scope.columns[i].title;
 				$scope.filter['filter[' + $scope.columns[i].relationshipName + ']' + '[' + $scope.columns[i].field + ']'].relationshipName = $scope.columns[i].relationshipName;
 			}
-			else
-			{
+			else {
 				var aux = $scope.columns[i].relationshipName.split('.');
 				var texto = 'filter';
 				for (var j = 0; j <= aux.length -1; j++) {
@@ -933,13 +932,15 @@ angular.module('adminProductsApp')
 			idCollection: 27
 		}, function(success) {
 			if (success.data) {
-				if ($scope.report.attributes.dynamic_attributes['65'].is_other) {
-					success.included.push({
-						id: 'id_de_mentira',
-						attributes: {
-							name: $scope.report.attributes.dynamic_attributes['65'].value
-						}
-					});
+				if ($scope.report.attributes.dynamic_attributes['65'] != undefined) {
+					if ($scope.report.attributes.dynamic_attributes['65'].is_other) {
+						success.included.push({
+							id: 'id_de_mentira',
+							attributes: {
+								name: $scope.report.attributes.dynamic_attributes['65'].value
+							}
+						});
+					}
 				}
 				for (var i = 0; i < success.included.length; i++) {
 					$scope.constructora.data.push({
