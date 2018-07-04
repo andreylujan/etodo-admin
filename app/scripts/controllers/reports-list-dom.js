@@ -713,7 +713,8 @@ angular.module('adminProductsApp')
  		$scope.elements.alert.text 	= '';
  		$scope.elements.alert.show 	= false;
 
- 		if (!Validators.validateRequiredField($scope.report.montoOferta.value)) {
+ 		if ($scope.report.montoOferta.value != '' && $scope.report.montoOferta.value != undefined 
+ 			&& $scope.report.montoOferta.value != null) {
  			$scope.elements.alert.color = 'danger';
  			$scope.elements.alert.title = 'Faltan campos por seleccionar';
  			$scope.elements.alert.text 	= 'Debe ingresar un monto de oferta';
